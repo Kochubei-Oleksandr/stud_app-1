@@ -1,5 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import axios from 'axios'
+
+import API from './api'
 
 Vue.use(Vuex)
 
@@ -16,10 +19,16 @@ const Store = new Vuex.Store({
       },
       {
         id: '3',
-        name: 'test3'
+        name: 'test3'  {
+      path: '/',
+      name: 'AddsList',
+      component: AddsList
+    },
       }
     ],
-    addItem: {}
+    addItem: {},
+    user: {},
+    isAuth: false
   },
   mutations: {
     updateAddsList (state, data) {
@@ -27,6 +36,12 @@ const Store = new Vuex.Store({
     },
     updateAddItem (state, data) {
       state.addItem = data
+    },
+    updateAuth (state, data) {
+      state.isAuth = data
+    },
+    updateUser (state, data) {
+      state.user = data
     }
   },
   actions: {
@@ -50,6 +65,13 @@ const Store = new Vuex.Store({
       })
 
       context.commit('updateAddsList', context.state.addsList)
+    },
+    login (context, params) {
+      return axios.post(API.login, params, {withCredentials: true})
+        .then(responce => {
+          context.commit('updateUser', responce.data)
+          context.commit('updateAuth', true)
+        })
     }
   }
 })
