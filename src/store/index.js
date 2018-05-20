@@ -49,7 +49,7 @@ const Store = new Vuex.Store({
       context.commit('updateAddsList', params.data)
     },
     showPostsLoad (context, params) {
-      return axios.get(`http://game/products/`)
+      return axios.get(`http://project.site/products/`)
         .then(responce => {
           context.commit('loadShowPosts', responce.data)
         })
