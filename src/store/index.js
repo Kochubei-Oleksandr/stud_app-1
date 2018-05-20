@@ -19,11 +19,7 @@ const Store = new Vuex.Store({
       },
       {
         id: '3',
-        name: 'test3'  {
-      path: '/',
-      name: 'AddsList',
-      component: AddsList
-    },
+        name: 'test3'
       }
     ],
     addItem: {},
