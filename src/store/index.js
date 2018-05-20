@@ -24,9 +24,13 @@ const Store = new Vuex.Store({
     ],
     addItem: {},
     user: {},
-    isAuth: false
+    isAuth: false,
+    showPosts: []
   },
   mutations: {
+    loadShowPosts (state, data) {
+      state.showPosts = data
+    },
     updateAddsList (state, data) {
       state.addsList = data
     },
@@ -43,6 +47,12 @@ const Store = new Vuex.Store({
   actions: {
     setList (context, params) {
       context.commit('updateAddsList', params.data)
+    },
+    showPostsLoad (context, params) {
+      return axios.get(`http://game/products/`)
+        .then(responce => {
+          context.commit('loadShowPosts', responce.data)
+        })
     },
     loadById (context, params) {
       context.state.addsList.forEach(item => {

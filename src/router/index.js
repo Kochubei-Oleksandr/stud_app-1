@@ -6,6 +6,7 @@ import Register from '@/components/Register'
 import SingleAdd from '@/components/SingleAdd'
 import AddForm from '@/components/AddForm'
 import Page404 from '@/components/Page404'
+import ShowPosts from '@/components/ShowPosts'
 
 Vue.use(Router)
 
@@ -15,6 +16,11 @@ export default new Router({
       path: '/',
       name: 'AddsList',
       component: AddsList
+    },
+    {
+      path: '/products',
+      name: 'ShowPosts',
+      component: ShowPosts
     },
     {
       path: '/login',
