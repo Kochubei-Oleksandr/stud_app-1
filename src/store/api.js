@@ -1,6 +1,7 @@
 export default {
   login: 'http://api.stud.hz/?action=login',
-  products: process.env.API_URL + '/products'
+  products: process.env.API_URL + '/products',
+  productsVip: process.env.API_URL
   // login: process.env.API_URL + '/login',
   // logout: process.env.API_URL + '/logout',
   // register: process.env.API_URL + '/register',

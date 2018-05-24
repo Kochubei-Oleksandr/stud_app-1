@@ -7,6 +7,7 @@ import SingleAdd from '@/components/SingleAdd'
 import AddForm from '@/components/AddForm'
 import Page404 from '@/components/Page404'
 import ShowPosts from '@/components/ShowPosts'
+import MainPage from '@/components/MainPage'
 
 Vue.use(Router)
 
@@ -14,8 +15,8 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'AddsList',
-      component: AddsList
+      name: 'MainPage',
+      component: MainPage
     },
     {
       path: '/products',
