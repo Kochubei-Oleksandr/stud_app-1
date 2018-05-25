@@ -29,9 +29,6 @@
   import { mapState } from 'vuex'
   
   export default {
-    data: () => ({
-      imgUrl: 'https://raw.githubusercontent.com/vuetifyjs/docs/dev/static/doc-images/cards/drop.jpg'
-    }),
     computed: {
       ...mapState({
         lists: 'showVipPosts'
