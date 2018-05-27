@@ -26,11 +26,15 @@ const Store = new Vuex.Store({
     user: {},
     isAuth: false,
     showPosts: [],
+    showPost:  [],
     showVipPosts: []
   },
   mutations: {
     loadShowPosts (state, data) {
       state.showPosts = data
+    },
+    loadShowPost (state, data) {
+      state.showPost = data
     },
     loadVipPosts (state, data) {
       state.showVipPosts = data
@@ -57,6 +61,13 @@ const Store = new Vuex.Store({
         .then(responce => {
           context.commit('loadShowPosts', responce.data)
         })
+    },
+    showPostLoad (context, params) {      
+      return axios.get(API.product + params.id)
+        .then(responce => {
+        context.commit('loadShowPost', responce.data)
+        })
+
     },
     showVipPostsLoad (context, params) {
       return axios.get(API.productsVip)
