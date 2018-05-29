@@ -94,11 +94,11 @@ const Store = new Vuex.Store({
       context.commit('updateAddsList', context.state.addsList)
     },
     login (context, params) {
-      return axios.post(API.login, params, {withCredentials: true})
-        .then(responce => {
-          context.commit('updateUser', responce.data)
-          context.commit('updateAuth', true)
-        })
+      return axios.post(API.login, JSON.stringify(params), {withCredentials: true})
+      .then(responce => {
+        context.commit('updateUser', responce.data)
+        context.commit('updateAuth', true)
+      })
     }
   }
 })

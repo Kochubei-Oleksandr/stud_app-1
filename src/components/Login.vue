@@ -10,7 +10,7 @@
             <input type="text" name="login" v-model="login">
         </div>
         <div>
-            <input type="password" name="pass" v-model="pass">
+            <input type="password" name="password" v-model="password">
         </div>
         <div>
             <button @click="loginAction">Login</button>
@@ -26,8 +26,8 @@ export default {
   name: 'Login',
   data () {
     return {
-      login: 'test',
-      pass: 'test',
+      login: 'A@A.A',
+      password: '88888888',
       hasError: false,
       limit: 10,
       page: 1
@@ -38,10 +38,10 @@ export default {
   },
   methods: {
     loginAction: function () {
-      this.$store.dispatch('login', {login: this.login, pass: this.pass})
+      this.$store.dispatch('login', {login: this.login, password: this.password})
         .then(() => {
           this.hasError = false
-          this.$router.push({name: 'AddsList'})
+          this.$router.push({name: 'User'})
         }).catch(err => {
           if (err.response.status !== 200) {
             this.hasError = true

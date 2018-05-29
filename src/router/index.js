@@ -9,6 +9,7 @@ import Page404 from '@/components/Page404'
 import ShowPosts from '@/components/ShowPosts'
 import ShowPost from '@/components/ShowPost'
 import MainPage from '@/components/MainPage'
+import User from '@/components/User'
 
 Vue.use(Router)
 
@@ -18,6 +19,11 @@ export default new Router({
       path: '/',
       name: 'MainPage',
       component: MainPage
+    },
+    {
+      path: '/user',
+      name: 'User',
+      component: User
     },
     {
       path: '/products',
