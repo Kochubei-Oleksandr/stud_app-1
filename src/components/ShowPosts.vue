@@ -4,7 +4,7 @@
             <v-container fluid grid-list-xl>
                 <v-layout row wrap align-center>
                     <v-flex flex xs12 sm4 md3 lg2 xl2 v-for="list in lists" :key="list.id">
-                        <v-card class="" hover>
+                        <v-card :to="{ name: 'ShowPost', params: { id: list.id } }" class="" hover>
                             <v-card-media
                             class="white--text"
                             height="150px"

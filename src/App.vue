@@ -85,7 +85,7 @@
         >
             <v-toolbar-title style="width: 300px" class="ml-0 pl-3">
                 <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
-                <span class="hidden-sm-and-down">Baraholka</span>
+                <v-btn flat depressed :to="{name: 'MainPage'}" class="hidden-sm-and-down">Baraholka</v-btn>
             </v-toolbar-title>
             <v-text-field
                 flat
@@ -95,8 +95,8 @@
                 class="hidden-sm-and-down"
             ></v-text-field>
             <v-spacer></v-spacer>
-            <v-btn color="info">Вход</v-btn>
-            <v-btn color="info">Регистрация</v-btn>
+            <v-btn :to="{name: 'Login'}" color="info">Вход</v-btn>
+            <v-btn :to="{name: 'Register'}" color="info">Регистрация</v-btn>
         </v-toolbar>
       <router-view/>
     </v-app>
