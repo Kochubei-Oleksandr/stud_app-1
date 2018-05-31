@@ -39,7 +39,9 @@ const Store = new Vuex.Store({
     authNav: [
         { path: "/register", title: "Register", auth: false },
         { path: "/login", title: "Login", auth: false }
-    ]
+    ],
+    categoriesList: [],
+    cityList: []
   },
 
   mutations: {
@@ -51,6 +53,12 @@ const Store = new Vuex.Store({
     },
     loadVipPosts (state, data) {
       state.showVipPosts = data
+    },
+    loadCatList (state, data) {
+      state.categoriesList = data
+    },
+    loadTownList (state, data) {
+      state.cityList = data
     },
     updateAddsList (state, data) {
       state.addsList = data
@@ -84,12 +92,23 @@ const Store = new Vuex.Store({
         .then(responce => {
         context.commit('loadShowPost', responce.data)
         })
-
     },
     showVipPostsLoad (context, params) {
       return axios.get(API.productsVip)
         .then(responce => {
           context.commit('loadVipPosts', responce.data)
+        })
+    },
+    loadCategoriesList (context, params) {
+      return axios.get(API.categoriesList)
+        .then(responce => {
+          context.commit('loadCatList', responce.data)
+        })
+    },
+    loadCityList (context, params) {
+      return axios.get(API.cityList)
+        .then(responce => {
+          context.commit('loadTownList', responce.data)
         })
     },
     loadById (context, params) {

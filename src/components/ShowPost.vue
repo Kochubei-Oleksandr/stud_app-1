@@ -40,7 +40,7 @@ export default {
   },
   created () {
     this.$store.dispatch('showPostLoad', {id: this.$route.params.id})
-  },
+  }
 }
 </script>
 

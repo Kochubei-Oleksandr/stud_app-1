@@ -20,7 +20,7 @@
                 <v-radio label="начала дорогие" value="sortMaxCost"></v-radio>
             </v-radio-group>
             <v-list dense>
-                <template v-for="item in items">
+                <template v-for="item in items1">
                     <v-layout
                     v-if="item.heading"
                     :key="item.heading"
@@ -37,7 +37,6 @@
                         </v-flex>
                     </v-layout>
                     <v-list-group
-                    v-else-if="item.children"
                     v-model="item.model"
                     :key="item.text"
                     :prepend-icon="item.model ? item.icon : item['icon-alt']"
@@ -51,30 +50,62 @@
                             </v-list-tile-content>
                         </v-list-tile>
                         <v-list-tile
-                        v-for="(child, i) in item.children"
+                        v-for="(child, i) in categoriesList"
                         :key="i"
                         @click=""
                         >
-                            <v-list-tile-action v-if="child.icon">
-                                <v-icon>{{ child.icon }}</v-icon>
-                            </v-list-tile-action>
                             <v-list-tile-content>
                                 <v-list-tile-title>
-                                    {{ child.text }}
+                                    {{ child.category }}
                                 </v-list-tile-title>
                             </v-list-tile-content>
                         </v-list-tile>
                     </v-list-group>
-                    <v-list-tile v-else :key="item.text" @click="">
-                        <v-list-tile-action>
-                            <v-icon>{{ item.icon }}</v-icon>
-                        </v-list-tile-action>
-                        <v-list-tile-content>
-                            <v-list-tile-title>
-                                {{ item.text }}
-                            </v-list-tile-title>
-                        </v-list-tile-content>
-                    </v-list-tile>
+                </template>
+            </v-list>
+            <v-list dense>
+                <template v-for="item in items2">
+                    <v-layout
+                    v-if="item.heading"
+                    :key="item.heading"
+                    row
+                    align-center
+                    >
+                        <v-flex xs6>
+                            <v-subheader v-if="item.heading">
+                                {{ item.heading }}
+                            </v-subheader>
+                        </v-flex>
+                        <v-flex xs6 class="text-xs-center">
+                            <a href="#!" class="body-2 black--text">EDIT</a>
+                        </v-flex>
+                    </v-layout>
+                    <v-list-group
+
+                    v-model="item.model"
+                    :key="item.text"
+                    :prepend-icon="item.model ? item.icon : item['icon-alt']"
+                    append-icon=""
+                    >
+                        <v-list-tile slot="activator">
+                            <v-list-tile-content>
+                                <v-list-tile-title>
+                                    {{ item.text }}
+                                </v-list-tile-title>
+                            </v-list-tile-content>
+                        </v-list-tile>
+                        <v-list-tile
+                        v-for="(child, i) in cityList"
+                        :key="i"
+                        @click=""
+                        >
+                            <v-list-tile-content>
+                                <v-list-tile-title>
+                                    {{ child.region }}
+                                </v-list-tile-title>
+                            </v-list-tile-content>
+                        </v-list-tile>
+                    </v-list-group>
                 </template>
             </v-list>
         </v-navigation-drawer>
@@ -126,36 +157,30 @@ import { mapState } from "vuex";
 export default {
   name: 'App',
   computed: {
-      ...mapState(['nav','authNav','isAuth'])
+      ...mapState(['nav','authNav','isAuth','categoriesList','cityList'])
+  },
+  created () {
+    this.$store.dispatch('loadCategoriesList');
+    this.$store.dispatch('loadCityList');
   },
   data: () => ({
       drawer: null,
       sortDate: 1,
       sortCost: 1,
-      items: [
+      items1: [
         {
           icon: 'keyboard_arrow_up',
           'icon-alt': 'keyboard_arrow_down',
           text: 'Категории',
-          model: false,
-          children: [
-            { text: 'Компьютеры' },
-            { text: 'Автомобили' },
-            { text: 'Для дома' },
-            { text: 'Техника' },
-            { text: 'Спорт' }
-          ]
-        },
+          model: false
+        }
+      ],
+      items2: [
         {
           icon: 'keyboard_arrow_up',
           'icon-alt': 'keyboard_arrow_down',
           text: 'Город',
-          model: false,
-          children: [
-            { text: 'Сумы' },
-            { text: 'Киев' },
-            { text: 'Харьков' }
-          ]
+          model: false
         }
       ]
     })
