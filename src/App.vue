@@ -7,6 +7,8 @@
           fixed
           app
           >
+            <v-btn flat depressed :to="{name: 'ShowPosts'}">Показать все объявления</v-btn>
+            <v-btn flat depressed :to="{name: 'MainPage'}">Показать все VIP-объявления</v-btn>
             <v-radio-group v-model="sortDate">
                 <p>Сортировка по дате публикации</p>
                 <v-radio label="Сначала новые" value="sortNew"></v-radio>
@@ -95,9 +97,6 @@
                 class="hidden-sm-and-down"
             ></v-text-field>
             <v-spacer></v-spacer>
-            <!-- <v-btn :to="{name: 'User'}" color="info">Личный кабинет</v-btn>
-            <v-btn :to="{name: 'Login'}" color="info">Вход</v-btn>
-            <v-btn :to="{name: 'Register'}" color="info">Регистрация</v-btn> -->
             <v-btn
                 flat
                 v-for="item in nav"

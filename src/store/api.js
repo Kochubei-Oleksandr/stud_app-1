@@ -2,7 +2,8 @@ export default {
   login: process.env.API_URL + '/login',
   products: process.env.API_URL + '/products',
   productsVip: process.env.API_URL,
-  product: process.env.API_URL + '/product/'
+  product: process.env.API_URL + '/product/',
+  register: process.env.API_URL + '/register'
   // product: process.env.API_URL + '/products/#{id}'
   // login: process.env.API_URL + '/login',
   // logout: process.env.API_URL + '/logout',

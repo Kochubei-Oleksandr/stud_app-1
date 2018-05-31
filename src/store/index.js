@@ -29,7 +29,7 @@ const Store = new Vuex.Store({
       apiToken: (localStorage.getItem('apiToken')) ? localStorage.getItem('apiToken') : null,
       name: (localStorage.getItem('name')) ? localStorage.getItem('name') : null
     },
-    isAuth: (localStorage.getItem('apiToken')) ? true : false,
+    isAuth: ( (localStorage.getItem('apiToken')) || (localStorage.getItem('apiToken') == "null") || (localStorage.getItem('apiToken') == "undefined") ) ? true : false,
     showPosts: [],
     showPost:  [],
     showVipPosts: [],
@@ -112,6 +112,13 @@ const Store = new Vuex.Store({
     },
     login (context, params) {
       return axios.post(API.login, JSON.stringify(params), {withCredentials: true})
+      .then(responce => {
+        context.commit('updateUser', responce.data)
+        context.commit('updateAuth', true)
+      })
+    },
+    register (context, params) {
+      return axios.post(API.register, JSON.stringify(params), {withCredentials: true})
       .then(responce => {
         context.commit('updateUser', responce.data)
         context.commit('updateAuth', true)
