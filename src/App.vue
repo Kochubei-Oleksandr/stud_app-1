@@ -95,8 +95,26 @@
                 class="hidden-sm-and-down"
             ></v-text-field>
             <v-spacer></v-spacer>
+            <!-- <v-btn :to="{name: 'User'}" color="info">Личный кабинет</v-btn>
             <v-btn :to="{name: 'Login'}" color="info">Вход</v-btn>
-            <v-btn :to="{name: 'Register'}" color="info">Регистрация</v-btn>
+            <v-btn :to="{name: 'Register'}" color="info">Регистрация</v-btn> -->
+            <v-btn
+                flat
+                v-for="item in nav"
+                :to="item.path"
+                :key="item.path"
+                v-if="item.auth === 'both' || item.auth === isAuth"
+            >{{ item.title }}
+            </v-btn>
+
+            <v-btn
+                flat
+                v-for="item in authNav"
+                :to="item.path"
+                :key="item.path"
+                v-if="item.auth === isAuth"
+            >{{ item.title }}
+            </v-btn>
         </v-toolbar>
       <router-view/>
     </v-app>
@@ -104,8 +122,13 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
   name: 'App',
+  computed: {
+      ...mapState(['nav','authNav','isAuth'])
+  },
   data: () => ({
       drawer: null,
       sortDate: 1,

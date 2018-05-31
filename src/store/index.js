@@ -23,12 +23,25 @@ const Store = new Vuex.Store({
       }
     ],
     addItem: {},
-    user: {},
-    isAuth: false,
+    user: {
+      userRole: (localStorage.getItem('userRole')) ? localStorage.getItem('userRole') : null,
+      userId: (localStorage.getItem('userId')) ? localStorage.getItem('userId') : null,
+      apiToken: (localStorage.getItem('apiToken')) ? localStorage.getItem('apiToken') : null,
+      name: (localStorage.getItem('name')) ? localStorage.getItem('name') : null
+    },
+    isAuth: (localStorage.getItem('apiToken')) ? true : false,
     showPosts: [],
     showPost:  [],
-    showVipPosts: []
+    showVipPosts: [],
+    nav: [
+      { path: "/user", title: "Личный кабинет", auth: true },
+    ],
+    authNav: [
+        { path: "/register", title: "Register", auth: false },
+        { path: "/login", title: "Login", auth: false }
+    ]
   },
+
   mutations: {
     loadShowPosts (state, data) {
       state.showPosts = data
@@ -49,7 +62,11 @@ const Store = new Vuex.Store({
       state.isAuth = data
     },
     updateUser (state, data) {
-      state.user = data
+      state.user = data,
+      localStorage.setItem("userId", data.user_id),
+      localStorage.setItem("apiToken", data.api_token),
+      localStorage.setItem("userRole", data.user_role),
+      localStorage.setItem("name", data.name)
     }
   },
   actions: {
