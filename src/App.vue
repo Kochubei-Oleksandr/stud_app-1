@@ -137,6 +137,8 @@
             >{{ item.title }}
             </v-btn>
 
+            <v-btn flat v-if="isAuth == true" @click="logoutActions" :to="{name: 'MainPage'}">Выйти</v-btn>
+
             <v-btn
                 flat
                 v-for="item in authNav"
@@ -162,6 +164,22 @@ export default {
   created () {
     this.$store.dispatch('loadCategoriesList');
     this.$store.dispatch('loadCityList');
+    this.$store.dispatch('logout');
+  },
+  methods: {
+    logoutActions: function () {
+      this.$store.dispatch('logout', {token: localStorage.getItem('apiToken')})
+        .then(() => {
+          this.hasError = false
+          if (this.isAuth){
+            this.$router.push({name: 'MainPage'})
+          }
+        }).catch(err => {
+          if (err.response.status !== 200) {
+            this.hasError = true
+          }
+        })
+    }
   },
   data: () => ({
       drawer: null,

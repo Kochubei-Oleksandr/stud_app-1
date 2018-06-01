@@ -24,17 +24,17 @@ const Store = new Vuex.Store({
     ],
     addItem: {},
     user: {
-/*       userRole: (localStorage.getItem('userRole')) ? localStorage.getItem('userRole') : null,
-      userId: (localStorage.getItem('userId')) ? localStorage.getItem('userId') : null, */
+      userRole: (localStorage.getItem('userRole')) ? localStorage.getItem('userRole') : null,
+      userId: (localStorage.getItem('userId')) ? localStorage.getItem('userId') : null,
       apiToken: (localStorage.getItem('apiToken')) ? localStorage.getItem('apiToken') : null,
       name: (localStorage.getItem('name')) ? localStorage.getItem('name') : null
     },
-    isAuth: ( (localStorage.getItem('apiToken') == "null") || (localStorage.getItem('apiToken') == "undefined") ) ? false : true,
+    isAuth: ( (localStorage.getItem('apiToken') == null) || (localStorage.getItem('apiToken') == "undefined") ) ? false : true,
     showPosts: [],
     showPost:  [],
     showVipPosts: [],
     nav: [
-      { path: "/user", title: "Личный кабинет", auth: true },
+      { path: "/user", title: "Личный кабинет", auth: true }
     ],
     authNav: [
         { path: "/register", title: "Register", auth: false },
@@ -71,9 +71,9 @@ const Store = new Vuex.Store({
     },
     updateUser (state, data) {
       state.user = data,
-/*       localStorage.setItem("userId", data.user_id), */
+      localStorage.setItem("userId", data.user_id),
       localStorage.setItem("apiToken", data.api_token),
-/*       localStorage.setItem("userRole", data.user_role), */
+      localStorage.setItem("userRole", data.user_role),
       localStorage.setItem("name", data.name)
     }
   },
