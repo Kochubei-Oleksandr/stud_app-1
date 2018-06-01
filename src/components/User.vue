@@ -5,7 +5,7 @@
                 <v-layout row wrap align-center justify-center>
                    <v-flex flex xs12 sm10 md10 lg8 xl8>
                         <h1>Тут будут данные пользователя {{user}}</h1>
-                        <v-btn :to="{name: 'MainPage'}" color="red">Выйти</v-btn>
+                        <v-btn @click="logoutAction" :to="{name: 'MainPage'}" color="red">Выйти</v-btn>
                     </v-flex>
                 </v-layout>
             </v-container>
@@ -27,6 +27,22 @@ export default {
       this.$router.push({name: 'Page404'})
     };
     this.$store.dispatch('login')
+    this.$store.dispatch('logout')
   },
+  methods: {
+    logoutAction: function () {
+      this.$store.dispatch('logout', {token: localStorage.getItem('apiToken')})
+        .then(() => {
+          this.hasError = false
+          if (this.isAuth){
+            this.$router.push({name: 'MainPage'})
+          }
+        }).catch(err => {
+          if (err.response.status !== 200) {
+            this.hasError = true
+          }
+        })
+    }
+  }
 }
 </script>
