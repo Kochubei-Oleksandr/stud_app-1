@@ -6,7 +6,7 @@ export default {
   products: process.env.API_URL + '/products',
   productsVip: process.env.API_URL,
   product: process.env.API_URL + '/product/',
-  
+
   categoriesList: process.env.API_URL + '/categories-list',
   cityList: process.env.API_URL + '/city-list'
   // product: process.env.API_URL + '/products/#{id}'

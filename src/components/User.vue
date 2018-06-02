@@ -25,18 +25,10 @@
                 </v-tab>
                 <v-tabs-items>
                   <v-tab-item :id="'tab-1'">
-                    <v-layout row wrap align-center justify-center>
-                      <v-flex flex xs12 sm10 md10 lg8 xl8>
-                            <h1>{{personal}} {{user}}</h1>
-                        </v-flex>
-                    </v-layout>
+                    <PersonalData></PersonalData>
                   </v-tab-item>
                   <v-tab-item :id="'tab-2'">
-                    <v-layout row wrap align-center justify-center>
-                      <v-flex flex xs12 sm10 md10 lg8 xl8>
-                            <h1>{{createPost}} {{user}}</h1>
-                        </v-flex>
-                    </v-layout>
+                    <AddPost></AddPost>
                   </v-tab-item>
                   <v-tab-item :id="'tab-3'">
                     <v-layout row wrap align-center justify-center>
@@ -68,8 +60,14 @@
 
 <script>
 import { mapState } from 'vuex'
+import PersonalData from './PersonalData.vue'
+import AddPost from './AddPost.vue'
 
 export default {
+  components: {
+    PersonalData,
+    AddPost
+  },
   data () {
     return {
       isAdmin: (localStorage.getItem('userRole') == "1") ? true : false,
@@ -82,30 +80,13 @@ export default {
   },
   computed: {
     ...mapState([
-      'user', 'isAuth','isAdmin'
+      'user', 'isAuth'
     ])
   },
   created () {
     if (this.isAuth == false) {
       this.$router.push({name: 'Page404'})
     };
-    this.$store.dispatch('login')
-    this.$store.dispatch('logout')
-  },
-  methods: {
-    logoutAction: function () {
-      this.$store.dispatch('logout', {token: localStorage.getItem('apiToken')})
-        .then(() => {
-          this.hasError = false
-          if (this.isAuth){
-            this.$router.push({name: 'MainPage'})
-          }
-        }).catch(err => {
-          if (err.response.status !== 200) {
-            this.hasError = true
-          }
-        })
-    }
   }
 }
 </script>

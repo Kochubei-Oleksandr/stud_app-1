@@ -77,6 +77,7 @@ const Store = new Vuex.Store({
       localStorage.setItem("name", data.name)
     }
   },
+
   actions: {
     setList (context, params) {
       context.commit('updateAddsList', params.data)
@@ -148,6 +149,12 @@ const Store = new Vuex.Store({
       .then(responce => {
         context.commit('updateUser', responce.data)
         context.commit('updateAuth', true)
+      })
+    },
+    createdPost (context, params) {
+      return axios.post(API.product, JSON.stringify(params), {withCredentials: true})
+      .then(responce => {
+        alert ('SUCCESS');
       })
     }
   }
