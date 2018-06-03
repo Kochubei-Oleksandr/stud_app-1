@@ -6,9 +6,10 @@
               dark
               color="cyan"
               show-arrows
+              fix
               >
                 <v-tabs-slider color="yellow"></v-tabs-slider>
-                <v-tab :href="'#tab-1'">
+                <v-tab :href="'#tab-1'" v-if="isAdmin == false">
                   <p>{{personal}}</p>
                 </v-tab>
                 <v-tab :href="'#tab-2'" v-if="isAdmin == false">
@@ -31,11 +32,7 @@
                     <AddPost></AddPost>
                   </v-tab-item>
                   <v-tab-item :id="'tab-3'">
-                    <v-layout row wrap align-center justify-center>
-                      <v-flex flex xs12 sm10 md10 lg8 xl8>
-                            <h1>{{myPost}} {{user}}</h1>
-                        </v-flex>
-                    </v-layout>
+                    <MyPosts></MyPosts>
                   </v-tab-item>
                   <v-tab-item :id="'tab-4'">
                     <v-layout row wrap align-center justify-center>
@@ -62,11 +59,14 @@
 import { mapState } from 'vuex'
 import PersonalData from './PersonalData.vue'
 import AddPost from './AddPost.vue'
+import MyPosts from './MyPosts.vue'
 
 export default {
+  name: '',
   components: {
     PersonalData,
-    AddPost
+    AddPost,
+    MyPosts
   },
   data () {
     return {
