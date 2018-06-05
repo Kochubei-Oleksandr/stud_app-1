@@ -43,8 +43,7 @@
                 v-model="idPostCategory"
                 prepend-icon="category"
                 label="Выберите нужную категорию"
-                hint="Нажмите, что бы выбрать категорию"
-                persistent-hint>
+                hint="Нажмите, что бы выбрать категорию">
                 </v-select>
 
                 <v-select
@@ -52,8 +51,7 @@
                 v-model="idCity"
                 prepend-icon="location_city"
                 label="Выберите ваш город"
-                hint="Нажмите, что бы выбрать город"
-                persistent-hint>
+                hint="Нажмите, что бы выбрать город">
                 </v-select>
 
                 <v-select
@@ -61,8 +59,7 @@
                 v-model="idStatus"
                 prepend-icon="fiber_new"
                 label="Выберите состояние товара"
-                hint="Нажмите, что бы выбрать состояние товара"
-                persistent-hint>
+                hint="Нажмите, что бы выбрать состояние товара">
                 </v-select>
 
                 <div>
@@ -91,7 +88,7 @@
         </v-card-text>
         <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn @click="createdPostAction" color="primary">Создать объявление</v-btn>
+            <v-btn @click="updatePostAction" color="primary">Сохранить изменения</v-btn>
         </v-card-actions>
         </v-card>
       </v-flex>
@@ -110,13 +107,26 @@ export default {
             );
         }
     },
+    created () {
+        this.idPost = this.$route.params.lists.id,
+        this.lists = this.$route.params.lists,
+        this.title = this.$route.params.lists.title,
+        this.text = this.$route.params.lists.text,
+        this.telephone = this.$route.params.lists.telephone,
+        this.price = this.$route.params.lists.price,
+        this.idPostCategory = this.$route.params.lists.id_post_category,
+        this.idCity = this.$route.params.lists.id_city,
+        this.idStatus = this.$route.params.lists.id_status
+    },
     data () {
         return {
+            lists: '',
             formData: {
                     displayFileName: null,
                     uploadFileData: null,
                     file: null
                 },
+            idPost: '',
             title: '',
             text: '',
             telephone: '',
@@ -167,8 +177,9 @@ export default {
         }
     },
    methods: {
-        createdPostAction: function () {
-            this.$store.dispatch('createdPost', {
+        updatePostAction: function () {
+            this.$store.dispatch('updatePost', {
+                idPost: this.idPost,
                 title: this.title,
                 text: this.text,
                 telephone: this.telephone,
@@ -181,7 +192,7 @@ export default {
             })
             .then(() => {
                 this.hasError = false
-                this.$router.push({name: 'User'})
+                this.$router.push({name: 'MyPosts'})
             }).catch(err => {
                 if (err.response.status !== 200) {
                     this.hasError = true

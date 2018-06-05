@@ -7,7 +7,6 @@
                     v-if="list.id_user == user.userId"
                     :key="list.id">
                         <v-card 
-                        :to="{ name: 'ShowPost', params: { id: list.id } }"
                         hover>
                             <v-card-media
                             class="white--text"
@@ -19,6 +18,10 @@
                                 {{ list.title }}
                                 <p style="margin-bottom: 0;">Стоимость: {{ list.price }}</p>
                             </v-card-text>
+                            <v-card-actions>
+                                <v-btn :to="{ name: 'RedactPost', params: { lists: list } }" flat color="orange">Изменить</v-btn>
+                                <v-btn @click="deletePostAction(list.id)" flat color="orange">Удалить</v-btn>
+                            </v-card-actions>
                         </v-card>
                     </v-flex>
                 </v-layout>
@@ -30,13 +33,33 @@
 import { mapState } from 'vuex'
 
 export default {
+    data () {
+        return {
+            token: localStorage.getItem('apiToken'),
+            idPost: ''
+        }
+    },
   computed: {
     ...mapState({
       lists: 'showPosts', user: 'user'
     })
   },
   created () {
-    this.$store.dispatch('showPostsLoad')
+    this.$store.dispatch('showPostsLoad');  
+  },
+  methods: {
+    deletePostAction: function (id) {
+        this.idPost = id
+        this.$store.dispatch('deletePost', {data: {token: this.token, idPost: this.idPost} })
+        .then(() => {
+            this.hasError = false
+            this.$router.push({name: 'User'})
+        }).catch(err => {
+            if (err.response.status !== 200) {
+                this.hasError = true
+            }
+        })
+    }
   }
 }
 </script>

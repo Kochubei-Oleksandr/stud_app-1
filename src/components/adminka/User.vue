@@ -1,6 +1,6 @@
 <template>
   <v-app id="inspire">
-        <v-content style="padding-top: 0;">
+        <v-content>
             <v-container fluid grid-list-xl>
               <v-tabs
               dark
@@ -9,14 +9,17 @@
               fix
               >
                 <v-tabs-slider color="yellow"></v-tabs-slider>
-                <v-tab :href="'#tab-1'" v-if="isAdmin == false">
+                <v-tab :to="{path:'/user/personal'}" v-if="isAdmin == false">
                   <p>{{personal}}</p>
                 </v-tab>
-                <v-tab :href="'#tab-2'" v-if="isAdmin == false">
+                <v-tab :to="{path:'/user/add-post'}" v-if="isAdmin == false">
                   <p>{{createPost}}</p>
                 </v-tab>
-                <v-tab :href="'#tab-3'" v-if="isAdmin == false">
+                <v-tab :to="{path:'/user/my-posts'}"  v-if="isAdmin == false">
                   <p>{{myPost}}</p>
+                </v-tab>
+                <v-tab :to="{path:'/user/redact-post'}"  v-if="redactShow == nowUrl">
+                  <p>{{redakt}}</p>
                 </v-tab>
                 <v-tab :href="'#tab-4'" v-if="isAdmin == true">
                   <p>{{moderate}}</p>
@@ -24,32 +27,8 @@
                 <v-tab :href="'#tab-5'" v-if="isAdmin == true">
                   <p>{{noModerate}}</p>
                 </v-tab>
-                <v-tabs-items>
-                  <v-tab-item :id="'tab-1'">
-                    <PersonalData></PersonalData>
-                  </v-tab-item>
-                  <v-tab-item :id="'tab-2'">
-                    <AddPost></AddPost>
-                  </v-tab-item>
-                  <v-tab-item :id="'tab-3'">
-                    <MyPosts></MyPosts>
-                  </v-tab-item>
-                  <v-tab-item :id="'tab-4'">
-                    <v-layout row wrap align-center justify-center>
-                      <v-flex flex xs12 sm10 md10 lg8 xl8>
-                            <h1>{{moderate}} {{user}}</h1>
-                        </v-flex>
-                    </v-layout>
-                  </v-tab-item>
-                  <v-tab-item :id="'tab-5'">
-                    <v-layout row wrap align-center justify-center>
-                      <v-flex flex xs12 sm10 md10 lg8 xl8>
-                            <h1>{{noModerate}} {{user}}</h1>
-                        </v-flex>
-                    </v-layout>
-                  </v-tab-item>
-                </v-tabs-items>
               </v-tabs>
+              <router-view></router-view>
             </v-container>
         </v-content>
     </v-app>
@@ -57,21 +36,15 @@
 
 <script>
 import { mapState } from 'vuex'
-import PersonalData from './PersonalData.vue'
-import AddPost from './AddPost.vue'
-import MyPosts from './MyPosts.vue'
 
 export default {
-  name: '',
-  components: {
-    PersonalData,
-    AddPost,
-    MyPosts
-  },
   data () {
     return {
+      redactShow: '/user/redact-post',
+      nowUrl: '',
       isAdmin: (localStorage.getItem('userRole') == "1") ? true : false,
       personal: 'Персональные данные',
+      redakt: 'Редактировать объявление',
       myPost: 'Мои объявления',
       createPost: 'Создать объявление',
       moderate: 'Проверенные объявления',
@@ -87,6 +60,7 @@ export default {
     if (this.isAuth == false) {
       this.$router.push({name: 'Page404'})
     };
+    this.nowUrl = this.$route.path
   }
 }
 </script>

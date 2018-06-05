@@ -19,7 +19,7 @@ const Store = new Vuex.Store({
     showPost:  [],
     showVipPosts: [],
     nav: [
-      { path: "/user", title: "Личный кабинет", auth: true }
+      { path: "/user/personal", title: "Личный кабинет", auth: true }
     ],
     authNav: [
         { path: "/register", title: "Register", auth: false },
@@ -112,7 +112,19 @@ const Store = new Vuex.Store({
     createdPost (context, params) {
       return axios.post(API.product, JSON.stringify(params), {withCredentials: true})
       .then(responce => {
-        alert ('SUCCESS');
+        alert ('Запись добавлена успешно!');
+      })
+    },
+    deletePost (context, params) {
+      return axios.delete(API.product, params)
+      .then(responce => {
+        alert ('Запись удалена успешно!');
+      })
+    },
+    updatePost (context, params) {
+      return axios.put(API.product, params)
+      .then(responce => {
+        alert ('Запись изменена успешно!');
       })
     }
   }

@@ -52,7 +52,7 @@ export default {
         .then(() => {
           this.hasError = false;
           if (this.isAuth){
-            this.$router.push({name: 'User'})
+            this.$router.push({name: 'PersonalData'})
           }
         }).catch(err => {
           if (err.response.status !== 200) {

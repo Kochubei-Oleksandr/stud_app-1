@@ -10,6 +10,7 @@ import User from '@/components/adminka/User'
 import AddPost from '@/components/adminka/AddPost'
 import MyPosts from '@/components/adminka/MyPosts'
 import PersonalData from '@/components/adminka/PersonalData'
+import RedactPost from '@/components/adminka/RedactPost'
 
 Vue.use(Router)
 
@@ -23,7 +24,29 @@ export default new Router({
     {
       path: '/user',
       name: 'User',
-      component: User
+      component: User,
+      children: [
+        {
+          path: 'personal',
+          name: 'PersonalData',
+          component: PersonalData
+        },
+        {
+          path: 'add-post',
+          name: 'AddPost',
+          component: AddPost
+        },
+        {
+          path: 'my-posts',
+          name: 'MyPosts',
+          component: MyPosts,
+        },
+        {
+          path: 'redact-post',
+          name: 'RedactPost',
+          component: RedactPost
+        }
+      ]
     },
     {
       path: '/products',
