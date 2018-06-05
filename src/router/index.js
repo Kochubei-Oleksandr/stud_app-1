@@ -11,6 +11,8 @@ import AddPost from '@/components/adminka/AddPost'
 import MyPosts from '@/components/adminka/MyPosts'
 import PersonalData from '@/components/adminka/PersonalData'
 import RedactPost from '@/components/adminka/RedactPost'
+import UnverifiedPost from '@/components/adminka/UnverifiedPost'
+import VerifiedPost from '@/components/adminka/VerifiedPost'
 
 Vue.use(Router)
 
@@ -44,7 +46,17 @@ export default new Router({
         {
           path: 'redact-post',
           name: 'RedactPost',
-          component: RedactPost
+          component: RedactPost,
+        },
+        {
+          path: 'verified-post',
+          name: 'VerifiedPost',
+          component: VerifiedPost
+        },
+        {
+          path: 'unverified-post',
+          name: 'UnverifiedPost',
+          component: UnverifiedPost
         }
       ]
     },

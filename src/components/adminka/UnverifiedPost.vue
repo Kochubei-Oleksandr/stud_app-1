@@ -4,7 +4,7 @@
                 <v-layout row wrap>
                     <v-flex flex xs12 sm4 md3 lg2 xl2 
                     v-for="list in lists"
-                    v-if="((list.id_user == user.userId) && (list.moderate == 1))"
+                    v-if="list.moderate == 0"
                     :key="list.id">
                         <v-card 
                         hover>
@@ -53,7 +53,7 @@ export default {
         this.$store.dispatch('deletePost', {data: {token: this.token, idPost: this.idPost} })
         .then(() => {
             this.hasError = false
-            this.$router.push({name: 'MyPosts'})
+            this.$router.push({name: 'UnverifiedPost'})
         }).catch(err => {
             if (err.response.status !== 200) {
                 this.hasError = true

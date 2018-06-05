@@ -62,6 +62,24 @@
                 hint="Нажмите, что бы выбрать состояние товара">
                 </v-select>
 
+                <v-select
+                v-if="isAdmin == true"
+                :items="moderate"
+                v-model="idModerate"
+                prepend-icon="fiber_new"
+                label="Выберите состояние модерации товара"
+                hint="Нажмите, что бы выбрать состояние модерации товара">
+                </v-select>
+
+                <v-select
+                v-if="isAdmin == true"
+                :items="vip"
+                v-model="idVip"
+                prepend-icon="fiber_new"
+                label="Выберите состояние VIP товара"
+                hint="Нажмите, что бы выбрать состояние VIP товара">
+                </v-select>
+
                 <div>
                     <v-btn @click="onButtonClick">
                         <v-icon>attach_file</v-icon>
@@ -120,12 +138,15 @@ export default {
     },
     data () {
         return {
+            isAdmin: (localStorage.getItem('userRole') == "1") ? true : false,
             lists: '',
             formData: {
                     displayFileName: null,
                     uploadFileData: null,
                     file: null
                 },
+            idModerate: '',
+            idVip: '',
             idPost: '',
             title: '',
             text: '',
@@ -173,12 +194,34 @@ export default {
                 value: 2,
                 text: 'Б\У'
                 }
+            ],
+            moderate: [
+                {
+                value: 1,
+                text: 'YES'
+                },
+                {
+                value: 2,
+                text: 'NO'
+                }
+            ],
+            vip: [
+                {
+                value: 1,
+                text: 'VIP'
+                },
+                {
+                value: 2,
+                text: 'Standart'
+                }
             ]
         }
     },
    methods: {
         updatePostAction: function () {
             this.$store.dispatch('updatePost', {
+                idModerate: this.idModerate,
+                idVip: this.idVip,
                 idPost: this.idPost,
                 title: this.title,
                 text: this.text,
@@ -192,7 +235,11 @@ export default {
             })
             .then(() => {
                 this.hasError = false
-                this.$router.push({name: 'MyPosts'})
+                if (this.isAdmin == false) {
+                    this.$router.push({name: 'MyPosts'})
+                } else {
+                    this.$router.push({name: 'UnverifiedPost'})
+                }
             }).catch(err => {
                 if (err.response.status !== 200) {
                     this.hasError = true

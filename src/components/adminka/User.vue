@@ -9,7 +9,7 @@
               fix
               >
                 <v-tabs-slider color="yellow"></v-tabs-slider>
-                <v-tab :to="{path:'/user/personal'}" v-if="isAdmin == false">
+                <v-tab :to="{path:'/user/personal'}">
                   <p>{{personal}}</p>
                 </v-tab>
                 <v-tab :to="{path:'/user/add-post'}" v-if="isAdmin == false">
@@ -21,10 +21,10 @@
                 <v-tab :to="{path:'/user/redact-post'}"  v-if="redactShow == nowUrl">
                   <p>{{redakt}}</p>
                 </v-tab>
-                <v-tab :href="'#tab-4'" v-if="isAdmin == true">
+                <v-tab :to="{path:'/user/verified-post'}" v-if="isAdmin == true">
                   <p>{{moderate}}</p>
                 </v-tab>
-                <v-tab :href="'#tab-5'" v-if="isAdmin == true">
+                <v-tab :to="{path:'/user/unverified-post'}" v-if="isAdmin == true">
                   <p>{{noModerate}}</p>
                 </v-tab>
               </v-tabs>
