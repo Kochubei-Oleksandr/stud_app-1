@@ -126,6 +126,12 @@ const Store = new Vuex.Store({
       .then(responce => {
         alert ('Запись изменена успешно!');
       })
+    },
+    sortPost (context, params) {
+      return axios.post(API.sort, JSON.stringify(params), {withCredentials: true})
+      .then(responce => {
+        context.commit('loadShowPosts', responce.data)
+      })
     }
   }
 })

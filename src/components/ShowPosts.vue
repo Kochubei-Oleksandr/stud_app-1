@@ -20,6 +20,7 @@
                     </v-flex>
                 </v-layout>
             </v-container>
+            {{sort}}
         </v-content>
     </v-app>
 </template>
@@ -30,11 +31,12 @@ import { mapState } from 'vuex'
 export default {
   computed: {
     ...mapState({
-      lists: 'showPosts'
+      lists: 'showPosts', sort: 'showPostsSort',
     })
   },
   created () {
-    this.$store.dispatch('showPostsLoad')
+    this.$store.dispatch('showPostsLoad');
+    this.$store.dispatch('sortPost');
   }
 }
 </script>

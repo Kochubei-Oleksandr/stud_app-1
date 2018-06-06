@@ -11,13 +11,13 @@
             <v-btn flat depressed :to="{name: 'MainPage'}">Показать все VIP-объявления</v-btn>
             <v-radio-group v-model="sortDate">
                 <p>Сортировка по дате публикации</p>
-                <v-radio label="Сначала новые" value="sortNew"></v-radio>
-                <v-radio label="Сначала старые" value="sortOld"></v-radio>
+                <v-radio v-on:change="sortAction" label="Сначала новые" value="1"></v-radio>
+                <v-radio v-on:change="sortAction" label="Сначала старые" value="2"></v-radio>
             </v-radio-group>
             <v-radio-group v-model="sortCost">
                 <p>Сортировка по стоимости</p>
-                <v-radio label="Сначала дешевые" value="sortLowCost"></v-radio>
-                <v-radio label="начала дорогие" value="sortMaxCost"></v-radio>
+                <v-radio v-on:change="sortAction" label="Сначала дешевые" value="1"></v-radio>
+                <v-radio v-on:change="sortAction" label="начала дорогие" value="2"></v-radio>
             </v-radio-group>
             <v-list dense>
                 <template v-for="item in items1">
@@ -179,12 +179,22 @@ export default {
             this.hasError = true
           }
         })
+    },
+    sortAction: function () {
+        this.$store.dispatch('sortPost', {date: this.sortDate, price: this.sortCost})
+        .then(() => {
+            this.hasError = false
+        }).catch(err => {
+            if (err.response.status !== 200) {
+                this.hasError = true
+            }
+        })
     }
   },
   data: () => ({
       drawer: null,
-      sortDate: 1,
-      sortCost: 1,
+      sortDate: '',
+      sortCost: '',
       items1: [
         {
           icon: 'keyboard_arrow_up',

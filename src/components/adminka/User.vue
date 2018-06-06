@@ -18,7 +18,7 @@
                 <v-tab :to="{path:'/user/my-posts'}"  v-if="isAdmin == false">
                   <p>{{myPost}}</p>
                 </v-tab>
-                <v-tab :to="{path:'/user/redact-post'}"  v-if="redactShow == nowUrl">
+                <v-tab :to="{path:'/user/redact-post'}"  v-if="redactShow == this.$route.path">
                   <p>{{redakt}}</p>
                 </v-tab>
                 <v-tab :to="{path:'/user/verified-post'}" v-if="isAdmin == true">
@@ -41,7 +41,6 @@ export default {
   data () {
     return {
       redactShow: '/user/redact-post',
-      nowUrl: '',
       isAdmin: (localStorage.getItem('userRole') == "1") ? true : false,
       personal: 'Персональные данные',
       redakt: 'Редактировать объявление',
@@ -59,8 +58,7 @@ export default {
   created () {
     if (this.isAuth == false) {
       this.$router.push({name: 'Page404'})
-    };
-    this.nowUrl = this.$route.path
+    }
   }
 }
 </script>
