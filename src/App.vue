@@ -43,7 +43,7 @@
                                 <v-list-tile-content>
                                     <v-list-tile avatar>
                                         <v-list-tile-action>
-                                            <v-checkbox v-model="categories"></v-checkbox>
+                                            <v-checkbox :id="child.id" :value="child.category" v-model="categories"></v-checkbox>
                                         </v-list-tile-action>
                                         <v-list-tile-content>
                                             <v-list-tile-title>{{ child.category }}</v-list-tile-title>
@@ -79,7 +79,7 @@
                                 <v-list-tile-content>
                                     <v-list-tile avatar>
                                         <v-list-tile-action>
-                                            <v-checkbox v-model="cities"></v-checkbox>
+                                            <v-checkbox :id="child.id" :value="child.city" v-model="cities"></v-checkbox>
                                         </v-list-tile-action>
                                         <v-list-tile-content>
                                             <v-list-tile-title>{{ child.city }}</v-list-tile-title>

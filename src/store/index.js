@@ -49,6 +49,9 @@ const Store = new Vuex.Store({
     loadRegionList (state, data) {
       state.regionList = data
     },
+    loadStatusList (state, data) {
+      state.statusList = data
+    },
     updateAuth (state, data) {
       state.isAuth = data
     },
@@ -96,6 +99,12 @@ const Store = new Vuex.Store({
       return axios.get(API.regionList)
         .then(responce => {
           context.commit('loadRegionList', responce.data)
+        })
+    },
+    loadStatusList (context, params) {
+      return axios.get(API.statusList)
+        .then(responce => {
+          context.commit('loadStatusList', responce.data)
         })
     },
     login (context, params) {

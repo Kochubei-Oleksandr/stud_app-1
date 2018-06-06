@@ -13,6 +13,8 @@ export default {
   regionList: process.env.API_URL + '/region-list',
   townList: process.env.API_URL + '/town-list',
 
+  statusList: process.env.API_URL + '/status-list',
+
   sort: process.env.API_URL + '/sort'
   // product: process.env.API_URL + '/products/#{id}'
   // login: process.env.API_URL + '/login',

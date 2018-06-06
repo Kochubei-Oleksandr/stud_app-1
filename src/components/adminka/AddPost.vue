@@ -39,16 +39,31 @@
                 </v-text-field>
 
                 <v-select
-                :items="category"
+                :items="categoriesList"
+                item-value="id"
+                item-text="category"
                 v-model="idPostCategory"
                 prepend-icon="category"
                 label="Выберите нужную категорию"
                 hint="Нажмите, что бы выбрать категорию"
                 persistent-hint>
                 </v-select>
+                
+                <v-select
+                :items="regionList"
+                item-value="id"
+                item-text="region"
+                v-model="idRegion"
+                prepend-icon="location_city"
+                label="Выберите ваш регион"
+                hint="Нажмите, что бы выбрать регион"
+                persistent-hint>
+                </v-select>
 
                 <v-select
-                :items="city"
+                :items="cityList"
+                item-value="id"
+                item-text="city"
                 v-model="idCity"
                 prepend-icon="location_city"
                 label="Выберите ваш город"
@@ -57,7 +72,9 @@
                 </v-select>
 
                 <v-select
-                :items="status"
+                :items="statusList"
+                item-value="id"
+                item-text="status"
                 v-model="idStatus"
                 prepend-icon="fiber_new"
                 label="Выберите состояние товара"
@@ -96,19 +113,30 @@
         </v-card>
       </v-flex>
     </v-layout>
+    <!-- {{cityList}} -->
   </v-container>
 </template>
 
 
 <script>
+import axios from 'axios'
+import { mapState } from "vuex";
 
 export default {
     computed: {
+        ...mapState(['categoriesList','cityList','regionList','statusList']),
         readyToUpload() {
             return (
                 this.formData.displayFileName && this.formData.uploadFileData
             );
         }
+    },
+    created () {
+        this.$store.dispatch('loadCategoriesList');
+        this.$store.dispatch('loadCityList');
+        this.$store.dispatch('loadRegionsList');
+        this.$store.dispatch('loadStatusList');
+        // this.regions = this.regionList
     },
     data () {
         return {
@@ -125,7 +153,9 @@ export default {
             idPostCategory: '',
             idCity: '',
             idStatus: '',
+            idRegion: '',
             token: localStorage.getItem('apiToken'),
+            regions: [],
             category: [
                 {
                 value: 1,
@@ -168,6 +198,21 @@ export default {
     },
    methods: {
         createdPostAction: function () {
+
+            let data = new FormData();
+            data.append("fupload", this.formData.file);
+            alert (data.append("fupload", this.formData.file));
+
+            axios.post("/upload_file", data, {withCredentials: true}).then(response => {
+                alert (data);
+                this.showInfo(data);
+                this.formData = {
+                    displayFileName: null,
+                    uploadFileData: null,
+                    file: null
+                };
+            });
+
             this.$store.dispatch('createdPost', {
                 title: this.title,
                 text: this.text,
@@ -181,7 +226,7 @@ export default {
             })
             .then(() => {
                 this.hasError = false
-                this.$router.push({name: 'User'})
+                this.$router.push({name: 'MyPosts'})
             }).catch(err => {
                 if (err.response.status !== 200) {
                     this.hasError = true
@@ -219,8 +264,8 @@ export default {
             let data = new FormData();
             data.append("fupload", this.formData.file);
 
-            axios.post("/api/upload_file", data).then(response => {
-                this.showInfo("File was successfuly uploaded!");
+            axios.post("/upload_file", data).then(response => {
+                this.showInfo("File was successfuly uploaded11111!");
                 this.formData = {
                     displayFileName: null,
                     uploadFileData: null,
