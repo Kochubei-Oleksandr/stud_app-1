@@ -1,15 +1,18 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import AddsList from '@/components/AddsList'
-import Login from '@/components/Login'
-import Register from '@/components/Register'
-import SingleAdd from '@/components/SingleAdd'
-import AddForm from '@/components/AddForm'
+import Login from '@/components/auth/Login'
+import Register from '@/components/auth/Register'
 import Page404 from '@/components/Page404'
 import ShowPosts from '@/components/ShowPosts'
 import ShowPost from '@/components/ShowPost'
 import MainPage from '@/components/MainPage'
-import User from '@/components/User'
+import User from '@/components/adminka/User'
+import AddPost from '@/components/adminka/AddPost'
+import MyPosts from '@/components/adminka/MyPosts'
+import PersonalData from '@/components/adminka/PersonalData'
+import RedactPost from '@/components/adminka/RedactPost'
+import UnverifiedPost from '@/components/adminka/UnverifiedPost'
+import VerifiedPost from '@/components/adminka/VerifiedPost'
 
 Vue.use(Router)
 
@@ -23,7 +26,39 @@ export default new Router({
     {
       path: '/user',
       name: 'User',
-      component: User
+      component: User,
+      children: [
+        {
+          path: 'personal',
+          name: 'PersonalData',
+          component: PersonalData
+        },
+        {
+          path: 'add-post',
+          name: 'AddPost',
+          component: AddPost
+        },
+        {
+          path: 'my-posts',
+          name: 'MyPosts',
+          component: MyPosts,
+        },
+        {
+          path: 'redact-post',
+          name: 'RedactPost',
+          component: RedactPost,
+        },
+        {
+          path: 'verified-post',
+          name: 'VerifiedPost',
+          component: VerifiedPost
+        },
+        {
+          path: 'unverified-post',
+          name: 'UnverifiedPost',
+          component: UnverifiedPost
+        }
+      ]
     },
     {
       path: '/products',
@@ -44,16 +79,6 @@ export default new Router({
       path: '/register',
       name: 'Register',
       component: Register
-    },
-    {
-      path: '/add:id(\\d+)',
-      name: 'SingleAdd',
-      component: SingleAdd
-    },
-    {
-      path: '/:id(\\d+)',
-      name: 'AddForm',
-      component: AddForm
     },
     {
       path: '*',

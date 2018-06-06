@@ -8,21 +8,6 @@ Vue.use(Vuex)
 
 const Store = new Vuex.Store({
   state: {
-    addsList: [
-      {
-        id: '1',
-        name: 'test1'
-      },
-      {
-        id: '2',
-        name: 'test2'
-      },
-      {
-        id: '3',
-        name: 'test3'
-      }
-    ],
-    addItem: {},
     user: {
       userRole: (localStorage.getItem('userRole')) ? localStorage.getItem('userRole') : null,
       userId: (localStorage.getItem('userId')) ? localStorage.getItem('userId') : null,
@@ -34,14 +19,15 @@ const Store = new Vuex.Store({
     showPost:  [],
     showVipPosts: [],
     nav: [
-      { path: "/user", title: "Личный кабинет", auth: true }
+      { path: "/user/personal", title: "Личный кабинет", auth: true }
     ],
     authNav: [
         { path: "/register", title: "Register", auth: false },
         { path: "/login", title: "Login", auth: false }
     ],
     categoriesList: [],
-    cityList: []
+    cityList: [],
+    regionList: []
   },
 
   mutations: {
@@ -60,11 +46,8 @@ const Store = new Vuex.Store({
     loadTownList (state, data) {
       state.cityList = data
     },
-    updateAddsList (state, data) {
-      state.addsList = data
-    },
-    updateAddItem (state, data) {
-      state.addItem = data
+    loadRegionList (state, data) {
+      state.regionList = data
     },
     updateAuth (state, data) {
       state.isAuth = data
@@ -77,10 +60,8 @@ const Store = new Vuex.Store({
       localStorage.setItem("name", data.name)
     }
   },
+
   actions: {
-    setList (context, params) {
-      context.commit('updateAddsList', params.data)
-    },
     showPostsLoad (context, params) {
       return axios.get(API.products)
         .then(responce => {
@@ -111,23 +92,11 @@ const Store = new Vuex.Store({
           context.commit('loadTownList', responce.data)
         })
     },
-    loadById (context, params) {
-      context.state.addsList.forEach(item => {
-        if (item.id === params.id) {
-          let editedItem = {}
-          Object.assign(editedItem, item)
-          context.commit('updateAddItem', editedItem)
-        }
-      })
-    },
-    save (context, params) {
-      context.state.addsList.forEach(item => {
-        if (item.id === params.item.id) {
-          item.name = params.item.name
-        }
-      })
-
-      context.commit('updateAddsList', context.state.addsList)
+    loadRegionsList (context, params) {
+      return axios.get(API.regionList)
+        .then(responce => {
+          context.commit('loadRegionList', responce.data)
+        })
     },
     login (context, params) {
       return axios.post(API.login, JSON.stringify(params), {withCredentials: true})
@@ -148,6 +117,30 @@ const Store = new Vuex.Store({
       .then(responce => {
         context.commit('updateUser', responce.data)
         context.commit('updateAuth', true)
+      })
+    },
+    createdPost (context, params) {
+      return axios.post(API.product, JSON.stringify(params), {withCredentials: true})
+      .then(responce => {
+        alert ('Запись добавлена успешно!');
+      })
+    },
+    deletePost (context, params) {
+      return axios.delete(API.product, params)
+      .then(responce => {
+        alert ('Запись удалена успешно!');
+      })
+    },
+    updatePost (context, params) {
+      return axios.put(API.product, params)
+      .then(responce => {
+        alert ('Запись изменена успешно!');
+      })
+    },
+    sortPost (context, params) {
+      return axios.post(API.sort, JSON.stringify(params), {withCredentials: true})
+      .then(responce => {
+        context.commit('loadShowPosts', responce.data)
       })
     }
   }

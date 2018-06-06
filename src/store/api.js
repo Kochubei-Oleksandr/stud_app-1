@@ -6,9 +6,14 @@ export default {
   products: process.env.API_URL + '/products',
   productsVip: process.env.API_URL,
   product: process.env.API_URL + '/product/',
-  
+
   categoriesList: process.env.API_URL + '/categories-list',
-  cityList: process.env.API_URL + '/city-list'
+  cityList: process.env.API_URL + '/city-list',
+
+  regionList: process.env.API_URL + '/region-list',
+  townList: process.env.API_URL + '/town-list',
+
+  sort: process.env.API_URL + '/sort'
   // product: process.env.API_URL + '/products/#{id}'
   // login: process.env.API_URL + '/login',
   // logout: process.env.API_URL + '/logout',
