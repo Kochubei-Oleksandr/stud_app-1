@@ -26,7 +26,8 @@ const Store = new Vuex.Store({
         { path: "/login", title: "Login", auth: false }
     ],
     categoriesList: [],
-    cityList: []
+    cityList: [],
+    regionList: []
   },
 
   mutations: {
@@ -44,6 +45,9 @@ const Store = new Vuex.Store({
     },
     loadTownList (state, data) {
       state.cityList = data
+    },
+    loadRegionList (state, data) {
+      state.regionList = data
     },
     updateAuth (state, data) {
       state.isAuth = data
@@ -86,6 +90,12 @@ const Store = new Vuex.Store({
       return axios.get(API.cityList)
         .then(responce => {
           context.commit('loadTownList', responce.data)
+        })
+    },
+    loadRegionsList (context, params) {
+      return axios.get(API.regionList)
+        .then(responce => {
+          context.commit('loadRegionList', responce.data)
         })
     },
     login (context, params) {

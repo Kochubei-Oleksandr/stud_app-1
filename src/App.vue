@@ -9,105 +9,88 @@
           >
             <v-btn flat depressed :to="{name: 'ShowPosts'}">Показать все объявления</v-btn>
             <v-btn flat depressed :to="{name: 'MainPage'}">Показать все VIP-объявления</v-btn>
-            <v-radio-group v-model="sortDate">
-                <p>Сортировка по дате публикации</p>
-                <v-radio v-on:change="sortAction" label="Сначала новые" value="1"></v-radio>
-                <v-radio v-on:change="sortAction" label="Сначала старые" value="2"></v-radio>
-            </v-radio-group>
-            <v-radio-group v-model="sortCost">
-                <p>Сортировка по стоимости</p>
-                <v-radio v-on:change="sortAction" label="Сначала дешевые" value="1"></v-radio>
-                <v-radio v-on:change="sortAction" label="начала дорогие" value="2"></v-radio>
-            </v-radio-group>
-            <v-list dense>
-                <template v-for="item in items1">
-                    <v-layout
-                    v-if="item.heading"
-                    :key="item.heading"
-                    row
-                    align-center
-                    >
-                        <v-flex xs6>
-                            <v-subheader v-if="item.heading">
-                                {{ item.heading }}
-                            </v-subheader>
-                        </v-flex>
-                        <v-flex xs6 class="text-xs-center">
-                            <a href="#!" class="body-2 black--text">EDIT</a>
-                        </v-flex>
-                    </v-layout>
-                    <v-list-group
-                    v-model="item.model"
-                    :key="item.text"
-                    :prepend-icon="item.model ? item.icon : item['icon-alt']"
-                    append-icon=""
-                    >
-                        <v-list-tile slot="activator">
-                            <v-list-tile-content>
-                                <v-list-tile-title>
-                                    {{ item.text }}
-                                </v-list-tile-title>
-                            </v-list-tile-content>
-                        </v-list-tile>
-                        <v-list-tile
-                        v-for="(child, i) in categoriesList"
-                        :key="i"
-                        @click=""
+            <div v-if="(('/' == this.$route.path) || ('/products' == this.$route.path))">
+                <v-radio-group v-model="sortDate">
+                    <p>Сортировка по дате публикации</p>
+                    <v-radio v-on:change="sortAction" label="Сначала новые" value="1"></v-radio>
+                    <v-radio v-on:change="sortAction" label="Сначала старые" value="2"></v-radio>
+                </v-radio-group>
+                <v-radio-group v-model="sortCost">
+                    <p>Сортировка по стоимости</p>
+                    <v-radio v-on:change="sortAction" label="Сначала дешевые" value="1"></v-radio>
+                    <v-radio v-on:change="sortAction" label="начала дорогие" value="2"></v-radio>
+                </v-radio-group>
+                <v-list dense>
+                    <template v-for="item in items1">
+                        <v-list-group
+                        v-model="item.model"
+                        :key="item.text"
+                        :prepend-icon="item.model ? item.icon : item['icon-alt']"
+                        append-icon=""
                         >
-                            <v-list-tile-content>
-                                <v-list-tile-title>
-                                    {{ child.category }}
-                                </v-list-tile-title>
-                            </v-list-tile-content>
-                        </v-list-tile>
-                    </v-list-group>
-                </template>
-            </v-list>
-            <v-list dense>
-                <template v-for="item in items2">
-                    <v-layout
-                    v-if="item.heading"
-                    :key="item.heading"
-                    row
-                    align-center
-                    >
-                        <v-flex xs6>
-                            <v-subheader v-if="item.heading">
-                                {{ item.heading }}
-                            </v-subheader>
-                        </v-flex>
-                        <v-flex xs6 class="text-xs-center">
-                            <a href="#!" class="body-2 black--text">EDIT</a>
-                        </v-flex>
-                    </v-layout>
-                    <v-list-group
-
-                    v-model="item.model"
-                    :key="item.text"
-                    :prepend-icon="item.model ? item.icon : item['icon-alt']"
-                    append-icon=""
-                    >
-                        <v-list-tile slot="activator">
-                            <v-list-tile-content>
-                                <v-list-tile-title>
-                                    {{ item.text }}
-                                </v-list-tile-title>
-                            </v-list-tile-content>
-                        </v-list-tile>
-                        <v-list-tile
-                        v-for="(child, i) in cityList"
-                        :key="i"
-                        @click=""
+                            <v-list-tile slot="activator">
+                                <v-list-tile-content>
+                                    <v-list-tile-title>
+                                        {{ item.text }}
+                                    </v-list-tile-title>
+                                </v-list-tile-content>
+                            </v-list-tile>
+                            <v-list-tile
+                            v-for="(child, i) in categoriesList"
+                            :key="i"
+                            @click=""
+                            >
+                                <v-list-tile-content>
+                                    <v-list-tile avatar>
+                                        <v-list-tile-action>
+                                            <v-checkbox v-model="categories"></v-checkbox>
+                                        </v-list-tile-action>
+                                        <v-list-tile-content>
+                                            <v-list-tile-title>{{ child.category }}</v-list-tile-title>
+                                        </v-list-tile-content>
+                                    </v-list-tile>
+                                </v-list-tile-content>
+                            </v-list-tile>
+                        </v-list-group>
+                    </template>
+                </v-list>
+                <v-list dense>
+                    <v-list-tile-title>Выберите нужный регион</v-list-tile-title>
+                    <template v-for="item in regionList">
+                        <v-list-group
+                        v-model="item.model"
+                        :key="item.text"
+                        :prepend-icon="item.model ? iconUp : iconDown"
+                        append-icon=""
                         >
-                            <v-list-tile-content>
-                                <v-list-tile-title>
-                                    {{ child.region }}
-                                </v-list-tile-title>
-                            </v-list-tile-content>
-                        </v-list-tile>
-                    </v-list-group>
-                </template>
-            </v-list>
+                            <v-list-tile slot="activator">
+                                <v-list-tile-content>
+                                    <v-list-tile-title>
+                                        {{ item.region }}
+                                    </v-list-tile-title>
+                                </v-list-tile-content>
+                            </v-list-tile>
+                            <v-list-tile
+                            v-for="(child, i) in cityList"
+                            v-if="((item.id == child.id_region))"
+                            :key="i"
+                            @click=""
+                            >
+                                <v-list-tile-content>
+                                    <v-list-tile avatar>
+                                        <v-list-tile-action>
+                                            <v-checkbox v-model="cities"></v-checkbox>
+                                        </v-list-tile-action>
+                                        <v-list-tile-content>
+                                            <v-list-tile-title>{{ child.city }}</v-list-tile-title>
+                                        </v-list-tile-content>
+                                    </v-list-tile>
+                                </v-list-tile-content>
+                            </v-list-tile>
+                        </v-list-group>
+                    </template>
+                </v-list>
+            </div>
         </v-navigation-drawer>
         <v-toolbar
         :clipped-left="$vuetify.breakpoint.lgAndUp"
@@ -159,12 +142,13 @@ import { mapState } from "vuex";
 export default {
   name: 'App',
   computed: {
-      ...mapState(['nav','authNav','isAuth','categoriesList','cityList'])
+      ...mapState(['nav','authNav','isAuth','categoriesList','cityList','regionList'])
   },
   created () {
     this.$store.dispatch('loadCategoriesList');
     this.$store.dispatch('loadCityList');
     this.$store.dispatch('logout');
+    this.$store.dispatch('loadRegionsList');
   },
   methods: {
     logoutActions: function () {
@@ -181,7 +165,8 @@ export default {
         })
     },
     sortAction: function () {
-        this.$store.dispatch('sortPost', {date: this.sortDate, price: this.sortCost})
+        ('/' == this.$route.path) ? this.sortPath = 'main' : this.sortPath = 'posts'
+        this.$store.dispatch('sortPost', {date: this.sortDate, price: this.sortCost, path: this.sortPath})
         .then(() => {
             this.hasError = false
         }).catch(err => {
@@ -193,21 +178,19 @@ export default {
   },
   data: () => ({
       drawer: null,
+      categories: '',
+      cities: '',
+      sortPath: '',
       sortDate: '',
       sortCost: '',
+      iconUp: 'keyboard_arrow_up',
+      iconDown: 'keyboard_arrow_down',
+      iconModel: false,
       items1: [
         {
           icon: 'keyboard_arrow_up',
           'icon-alt': 'keyboard_arrow_down',
           text: 'Категории',
-          model: false
-        }
-      ],
-      items2: [
-        {
-          icon: 'keyboard_arrow_up',
-          'icon-alt': 'keyboard_arrow_down',
-          text: 'Город',
           model: false
         }
       ]
