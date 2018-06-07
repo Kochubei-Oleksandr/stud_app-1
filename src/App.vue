@@ -145,6 +145,8 @@ export default {
       drawer: null,
       categories: '',
       cities: '',
+      sortDate: '',
+      sortCost: '',
       sortPath: '',
       iconUp: 'keyboard_arrow_up',
       iconDown: 'keyboard_arrow_down',
