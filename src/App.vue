@@ -10,15 +10,15 @@
             <v-btn flat depressed :to="{name: 'ShowPosts'}">Показать все объявления</v-btn>
             <v-btn flat depressed :to="{name: 'MainPage'}">Показать все VIP-объявления</v-btn>
             <div v-if="(('/' == this.$route.path) || ('/products' == this.$route.path))">
+                <v-radio-group v-model="sortCost">
+                    <p>Сортировка по стоимости</p>
+                    <v-radio v-on:change="sortAction" label="Сначала дешевые" value="2"></v-radio>
+                    <v-radio v-on:change="sortAction" label="начала дорогие" value="1"></v-radio>
+                </v-radio-group>
                 <v-radio-group v-model="sortDate">
                     <p>Сортировка по дате публикации</p>
                     <v-radio v-on:change="sortAction" label="Сначала новые" value="1"></v-radio>
                     <v-radio v-on:change="sortAction" label="Сначала старые" value="2"></v-radio>
-                </v-radio-group>
-                <v-radio-group v-model="sortCost">
-                    <p>Сортировка по стоимости</p>
-                    <v-radio v-on:change="sortAction" label="Сначала дешевые" value="1"></v-radio>
-                    <v-radio v-on:change="sortAction" label="начала дорогие" value="2"></v-radio>
                 </v-radio-group>
                 <v-list dense>
                     <template v-for="item in items1">
@@ -141,13 +141,29 @@ import { mapState } from "vuex";
 
 export default {
   name: 'App',
+  data: () => ({
+      drawer: null,
+      categories: '',
+      cities: '',
+      sortPath: '',
+      iconUp: 'keyboard_arrow_up',
+      iconDown: 'keyboard_arrow_down',
+      iconModel: false,
+      items1: [
+        {
+          icon: 'keyboard_arrow_up',
+          'icon-alt': 'keyboard_arrow_down',
+          text: 'Категории',
+          model: false
+        }
+      ]
+    }),
   computed: {
       ...mapState(['nav','authNav','isAuth','categoriesList','cityList','regionList'])
   },
   created () {
     this.$store.dispatch('loadCategoriesList');
     this.$store.dispatch('loadCityList');
-    this.$store.dispatch('logout');
     this.$store.dispatch('loadRegionsList');
   },
   methods: {
@@ -166,7 +182,9 @@ export default {
     },
     sortAction: function () {
         ('/' == this.$route.path) ? this.sortPath = 'main' : this.sortPath = 'posts'
-        this.$store.dispatch('sortPost', {date: this.sortDate, price: this.sortCost, path: this.sortPath})
+        this.$nextTick(function () {
+            this.$store.dispatch('sortPost', {date: this.sortDate, price: this.sortCost, path: this.sortPath})
+        })
         .then(() => {
             this.hasError = false
         }).catch(err => {
@@ -175,25 +193,6 @@ export default {
             }
         })
     }
-  },
-  data: () => ({
-      drawer: null,
-      categories: '',
-      cities: '',
-      sortPath: '',
-      sortDate: '',
-      sortCost: '',
-      iconUp: 'keyboard_arrow_up',
-      iconDown: 'keyboard_arrow_down',
-      iconModel: false,
-      items1: [
-        {
-          icon: 'keyboard_arrow_up',
-          'icon-alt': 'keyboard_arrow_down',
-          text: 'Категории',
-          model: false
-        }
-      ]
-    })
+  }
 }
 </script>

@@ -17,7 +17,6 @@ const Store = new Vuex.Store({
     isAuth: ( (localStorage.getItem('apiToken') == null) || (localStorage.getItem('apiToken') == "undefined") ) ? false : true,
     showPosts: [],
     showPost:  [],
-    showVipPosts: [],
     nav: [
       { path: "/user/personal", title: "Личный кабинет", auth: true }
     ],
@@ -37,9 +36,6 @@ const Store = new Vuex.Store({
     },
     loadShowPost (state, data) {
       state.showPost = data
-    },
-    loadVipPosts (state, data) {
-      state.showVipPosts = data
     },
     loadCatList (state, data) {
       state.categoriesList = data
@@ -66,6 +62,12 @@ const Store = new Vuex.Store({
   },
 
   actions: {
+    sortPost (context, params) {
+      return axios.post(API.sort, JSON.stringify(params), {withCredentials: true})
+      .then(responce => {
+        context.commit('loadShowPosts', responce.data)
+      })
+    },
     showPostsLoad (context, params) {
       return axios.get(API.products)
         .then(responce => {
@@ -76,12 +78,6 @@ const Store = new Vuex.Store({
       return axios.get(API.product + params.id)
         .then(responce => {
         context.commit('loadShowPost', responce.data)
-        })
-    },
-    showVipPostsLoad (context, params) {
-      return axios.get(API.productsVip)
-        .then(responce => {
-          context.commit('loadVipPosts', responce.data)
         })
     },
     loadCategoriesList (context, params) {
@@ -145,12 +141,6 @@ const Store = new Vuex.Store({
       return axios.put(API.product, params)
       .then(responce => {
         alert ('Запись изменена успешно!');
-      })
-    },
-    sortPost (context, params) {
-      return axios.post(API.sort, JSON.stringify(params), {withCredentials: true})
-      .then(responce => {
-        context.commit('loadShowPosts', responce.data)
       })
     }
   }

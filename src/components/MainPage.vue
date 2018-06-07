@@ -4,7 +4,7 @@
             <v-container fluid grid-list-xl>
                 <h2>VIP-объявления на baraholka.pp.ua</h2>
                 <v-layout row wrap align-center>
-                    <v-flex flex xs12 sm4 md3 lg2 xl2 v-for="list in lists" :key="list.id" v-if="list.moderate == 1">
+                    <v-flex flex xs12 sm4 md3 lg2 xl2 v-for="list in lists" :key="list.id" v-if="( (list.moderate == 1) && ((list.vip == 1)) )">
                         <v-card :to="{ name: 'ShowPost', params: { id: list.id } }" class="" hover>
                             <v-card-media
                             class="white--text"
@@ -31,11 +31,11 @@
   export default {
     computed: {
       ...mapState({
-        lists: 'showVipPosts'
+        lists: 'showPosts'
       })
     },
     created () {
-      this.$store.dispatch('showVipPostsLoad')
+      this.$store.dispatch('showPostsLoad')
     }
   }
 </script>
