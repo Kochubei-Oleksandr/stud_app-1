@@ -39,27 +39,71 @@
                 </v-text-field>
 
                 <v-select
-                :items="category"
+                :items="categoriesList"
+                item-value="id"
+                item-text="category"
                 v-model="idPostCategory"
                 prepend-icon="category"
                 label="Выберите нужную категорию"
-                hint="Нажмите, что бы выбрать категорию">
+                hint="Нажмите, что бы выбрать категорию"
+                persistent-hint>
                 </v-select>
-
+                
                 <v-select
-                :items="city"
-                v-model="idCity"
+                :items="regionList"
+                item-value="id"
+                item-text="region"
+                v-model="idRegion"
                 prepend-icon="location_city"
-                label="Выберите ваш город"
-                hint="Нажмите, что бы выбрать город">
+                label="Выберите ваш регион"
+                hint="Нажмите, что бы выбрать регион"
+                persistent-hint>
                 </v-select>
 
+                <template v-if="(idRegion != '')" v-for="item in items1">
+                    <v-list-group
+                    v-model="item.model"
+                    :key="item.text"
+                    :prepend-icon="item.model ? item.icon : item['icon-alt']"
+                    append-icon=""
+                    >
+                        <v-list-tile slot="activator">
+                            <v-list-tile-content>
+                                <v-list-tile-title>
+                                    {{ item.text }}
+                                </v-list-tile-title>
+                            </v-list-tile-content>
+                        </v-list-tile>
+                        <v-list-tile
+                        v-for="(child, i) in cityList"
+                        v-show="child.id_region == idRegion"
+                        :key="i"
+                        >
+                            <v-list-tile-content>
+                                <v-list-tile avatar>
+                                    <v-list-tile-action>
+                                        <v-radio-group v-model="idCity">
+                                            <v-radio :id="child.id" :value="child.id"></v-radio>
+                                        </v-radio-group>
+                                    </v-list-tile-action>
+                                    <v-list-tile-content>
+                                        <v-list-tile-title>{{ child.city }}</v-list-tile-title>
+                                    </v-list-tile-content>
+                                </v-list-tile>
+                            </v-list-tile-content>
+                        </v-list-tile>
+                    </v-list-group>
+                </template>
+
                 <v-select
-                :items="status"
+                :items="statusList"
+                item-value="id"
+                item-text="status"
                 v-model="idStatus"
                 prepend-icon="fiber_new"
                 label="Выберите состояние товара"
-                hint="Нажмите, что бы выбрать состояние товара">
+                hint="Нажмите, что бы выбрать состояние товара"
+                persistent-hint>
                 </v-select>
 
                 <v-select
@@ -116,9 +160,12 @@
 
 
 <script>
+import axios from 'axios'
+import { mapState } from "vuex";
 
 export default {
     computed: {
+        ...mapState(['categoriesList','cityList','regionList','statusList']),
         readyToUpload() {
             return (
                 this.formData.displayFileName && this.formData.uploadFileData
@@ -126,6 +173,10 @@ export default {
         }
     },
     created () {
+        this.$store.dispatch('loadCategoriesList');
+        this.$store.dispatch('loadCityList');
+        this.$store.dispatch('loadRegionsList');
+        this.$store.dispatch('loadStatusList');
         this.idPost = this.$route.params.lists.id,
         this.lists = this.$route.params.lists,
         this.title = this.$route.params.lists.title,
@@ -138,6 +189,14 @@ export default {
     },
     data () {
         return {
+            items1: [
+                {
+                icon: 'keyboard_arrow_up',
+                'icon-alt': 'keyboard_arrow_down',
+                text: 'Выбирите нужный город',
+                model: false
+                }
+            ],
             isAdmin: (localStorage.getItem('userRole') == "1") ? true : false,
             lists: '',
             formData: {
@@ -156,45 +215,8 @@ export default {
             idPostCategory: '',
             idCity: '',
             idStatus: '',
+            idRegion: '',
             token: localStorage.getItem('apiToken'),
-            category: [
-                {
-                value: 1,
-                text: 'Автомобили'
-                },
-                {
-                value: 2,
-                text: 'Компьютеры'
-                },
-                {
-                value: 3,
-                text: 'Телефоны'
-                }
-            ],
-            city: [
-                {
-                value: 1,
-                text: 'Киев'
-                },
-                {
-                value: 2,
-                text: 'Сумы'
-                },
-                {
-                value: 3,
-                text: 'Харьков'
-                }
-            ],
-            status: [
-                {
-                value: 1,
-                text: 'Новое'
-                },
-                {
-                value: 2,
-                text: 'Б\У'
-                }
-            ],
             moderate: [
                 {
                 value: 1,

@@ -27,7 +27,8 @@ const Store = new Vuex.Store({
     ],
     categoriesList: [],
     cityList: [],
-    regionList: []
+    regionList: [],
+    statusList: []
   },
 
   mutations: {

@@ -1,4 +1,5 @@
 <template>
+<div>
   <v-container fluid fill-height>
     <v-layout justify-center>
       <v-flex xs12 sm10 md8>
@@ -60,16 +61,40 @@
                 persistent-hint>
                 </v-select>
 
-                <v-select
-                :items="cityList"
-                item-value="id"
-                item-text="city"
-                v-model="idCity"
-                prepend-icon="location_city"
-                label="Выберите ваш город"
-                hint="Нажмите, что бы выбрать город"
-                persistent-hint>
-                </v-select>
+                <template v-if="(idRegion != '')" v-for="item in items1">
+                    <v-list-group
+                    v-model="item.model"
+                    :key="item.text"
+                    :prepend-icon="item.model ? item.icon : item['icon-alt']"
+                    append-icon=""
+                    >
+                        <v-list-tile slot="activator">
+                            <v-list-tile-content>
+                                <v-list-tile-title>
+                                    {{ item.text }}
+                                </v-list-tile-title>
+                            </v-list-tile-content>
+                        </v-list-tile>
+                        <v-list-tile
+                        v-for="(child, i) in cityList"
+                        v-show="child.id_region == idRegion"
+                        :key="i"
+                        >
+                            <v-list-tile-content>
+                                <v-list-tile avatar>
+                                    <v-list-tile-action>
+                                        <v-radio-group v-model="idCity">
+                                            <v-radio :id="child.id" :value="child.id"></v-radio>
+                                        </v-radio-group>
+                                    </v-list-tile-action>
+                                    <v-list-tile-content>
+                                        <v-list-tile-title>{{ child.city }}</v-list-tile-title>
+                                    </v-list-tile-content>
+                                </v-list-tile>
+                            </v-list-tile-content>
+                        </v-list-tile>
+                    </v-list-group>
+                </template>
 
                 <v-select
                 :items="statusList"
@@ -113,8 +138,8 @@
         </v-card>
       </v-flex>
     </v-layout>
-    <!-- {{cityList}} -->
   </v-container>
+</div>
 </template>
 
 
@@ -136,10 +161,17 @@ export default {
         this.$store.dispatch('loadCityList');
         this.$store.dispatch('loadRegionsList');
         this.$store.dispatch('loadStatusList');
-        // this.regions = this.regionList
     },
     data () {
         return {
+            items1: [
+                {
+                icon: 'keyboard_arrow_up',
+                'icon-alt': 'keyboard_arrow_down',
+                text: 'Выбирите нужный город',
+                model: false
+                }
+            ],
             formData: {
                     displayFileName: null,
                     uploadFileData: null,
@@ -154,46 +186,7 @@ export default {
             idCity: '',
             idStatus: '',
             idRegion: '',
-            token: localStorage.getItem('apiToken'),
-            regions: [],
-            category: [
-                {
-                value: 1,
-                text: 'Автомобили'
-                },
-                {
-                value: 2,
-                text: 'Компьютеры'
-                },
-                {
-                value: 3,
-                text: 'Телефоны'
-                }
-            ],
-            city: [
-                {
-                value: 1,
-                text: 'Киев'
-                },
-                {
-                value: 2,
-                text: 'Сумы'
-                },
-                {
-                value: 3,
-                text: 'Харьков'
-                }
-            ],
-            status: [
-                {
-                value: 1,
-                text: 'Новое'
-                },
-                {
-                value: 2,
-                text: 'Б\У'
-                }
-            ]
+            token: localStorage.getItem('apiToken')
         }
     },
    methods: {
