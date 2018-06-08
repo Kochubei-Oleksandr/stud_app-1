@@ -15,7 +15,9 @@ export default {
 
   statusList: process.env.API_URL + '/status-list',
 
-  sort: process.env.API_URL + '/sort'
+  sort: process.env.API_URL + '/sort',
+  sortCategory: process.env.API_URL + '/sort-category',
+  search: process.env.API_URL + '/search-post',
   // product: process.env.API_URL + '/products/#{id}'
   // login: process.env.API_URL + '/login',
   // logout: process.env.API_URL + '/logout',

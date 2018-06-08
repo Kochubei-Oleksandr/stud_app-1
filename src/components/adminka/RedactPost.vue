@@ -299,7 +299,7 @@ export default {
             let data = new FormData();
             data.append("fupload", this.formData.file);
 
-            axios.post("/api/upload_file", data).then(response => {
+            axios.post("http://game/upload_file", data).then(response => {
                 this.showInfo("File was successfuly uploaded!");
                 this.formData = {
                     displayFileName: null,

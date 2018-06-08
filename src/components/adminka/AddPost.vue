@@ -196,7 +196,7 @@ export default {
             data.append("fupload", this.formData.file);
             alert (data.append("fupload", this.formData.file));
 
-            axios.post("/upload_file", data, {withCredentials: true}).then(response => {
+            axios.post("http://game/upload_file", data, {withCredentials: true}).then(response => {
                 alert (data);
                 this.showInfo(data);
                 this.formData = {

@@ -43,7 +43,7 @@
                                 <v-list-tile-content>
                                     <v-list-tile avatar>
                                         <v-list-tile-action>
-                                            <v-checkbox :id="child.id" :value="child.category" v-model="categories"></v-checkbox>
+                                            <v-checkbox v-on:change="sortCategoryAction" :id="child.id" :value="child.id" v-model="categories"></v-checkbox>
                                         </v-list-tile-action>
                                         <v-list-tile-content>
                                             <v-list-tile-title>{{ child.category }}</v-list-tile-title>
@@ -79,7 +79,7 @@
                                 <v-list-tile-content>
                                     <v-list-tile avatar>
                                         <v-list-tile-action>
-                                            <v-checkbox :id="child.id" :value="child.city" v-model="cities"></v-checkbox>
+                                            <v-checkbox v-on:change="sortCategoryAction" :id="child.id" :value="child.id" v-model="cities"></v-checkbox>
                                         </v-list-tile-action>
                                         <v-list-tile-content>
                                             <v-list-tile-title>{{ child.city }}</v-list-tile-title>
@@ -104,6 +104,9 @@
                 <v-btn flat depressed :to="{name: 'MainPage'}" class="hidden-sm-and-down">Baraholka</v-btn>
             </v-toolbar-title>
             <v-text-field
+                v-if="(('/' == this.$route.path) || ('/products' == this.$route.path))"
+                v-on:keyup.enter="onEnterSearch"
+                v-model="messageSearch"
                 flat
                 solo-inverted
                 prepend-icon="search"
@@ -142,9 +145,10 @@ import { mapState } from "vuex";
 export default {
   name: 'App',
   data: () => ({
+      messageSearch: '',
       drawer: null,
-      categories: '',
-      cities: '',
+      categories: [],
+      cities: [],
       sortDate: '',
       sortCost: '',
       sortPath: '',
@@ -169,6 +173,19 @@ export default {
     this.$store.dispatch('loadRegionsList');
   },
   methods: {
+    onEnterSearch: function() {
+       ('/' == this.$route.path) ? this.sortPath = 'main' : this.sortPath = 'posts'
+        this.$nextTick(function () {
+            this.$store.dispatch('searchPost', {data: this.messageSearch})
+        })
+        .then(() => {
+            this.hasError = false
+        }).catch(err => {
+            if (err.response.status !== 200) {
+                this.hasError = true
+            }
+        })
+    },
     logoutActions: function () {
       this.$store.dispatch('logout', {token: localStorage.getItem('apiToken')})
         .then(() => {
@@ -186,6 +203,19 @@ export default {
         ('/' == this.$route.path) ? this.sortPath = 'main' : this.sortPath = 'posts'
         this.$nextTick(function () {
             this.$store.dispatch('sortPost', {date: this.sortDate, price: this.sortCost, path: this.sortPath})
+        })
+        .then(() => {
+            this.hasError = false
+        }).catch(err => {
+            if (err.response.status !== 200) {
+                this.hasError = true
+            }
+        })
+    },
+    sortCategoryAction: function () {
+        ('/' == this.$route.path) ? this.sortPath = 'main' : this.sortPath = 'posts'
+        this.$nextTick(function () {
+            this.$store.dispatch('sortCategoryPost', {categories: this.categories, cities: this.cities})
         })
         .then(() => {
             this.hasError = false

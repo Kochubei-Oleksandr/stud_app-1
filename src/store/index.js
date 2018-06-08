@@ -68,6 +68,18 @@ const Store = new Vuex.Store({
         context.commit('loadShowPosts', responce.data)
       })
     },
+    sortCategoryPost (context, params) {
+      return axios.post(API.sortCategory, JSON.stringify(params), {withCredentials: true})
+      .then(responce => {
+        context.commit('loadShowPosts', responce.data)
+      })
+    },
+    searchPost (context, params) {
+      return axios.post(API.search, JSON.stringify(params), {withCredentials: true})
+      .then(responce => {
+        context.commit('loadShowPosts', responce.data)
+      })
+    },
     showPostsLoad (context, params) {
       return axios.get(API.products)
         .then(responce => {
