@@ -81,7 +81,7 @@ const Store = new Vuex.Store({
       })
     },
     showPostsLoad (context, params) {
-      return axios.get(API.products)
+      return axios.post(API.products)
         .then(responce => {
           context.commit('loadShowPosts', responce.data)
         })

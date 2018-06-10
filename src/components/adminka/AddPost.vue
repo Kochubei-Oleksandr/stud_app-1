@@ -124,10 +124,6 @@
                         <img :src="formData.uploadFileData" class="preview-image">
                     </div>
 
-                    <v-btn v-if="readyToUpload" @click="uploadImage">
-                        <v-icon left>cloud_upload</v-icon>
-                        Upload File
-                    </v-btn>
                 </div>
             </v-form>
         </v-card-text>
@@ -194,10 +190,8 @@ export default {
 
             let data = new FormData();
             data.append("fupload", this.formData.file);
-            alert (data.append("fupload", this.formData.file));
 
             axios.post("http://game/upload_file", data, {withCredentials: true}).then(response => {
-                alert (data);
                 this.showInfo(data);
                 this.formData = {
                     displayFileName: null,
@@ -251,20 +245,6 @@ export default {
 
         calcSize(size) {
             return Math.round(size / 1024);
-        },
-
-        uploadImage() {
-            let data = new FormData();
-            data.append("fupload", this.formData.file);
-
-            axios.post("/upload_file", data).then(response => {
-                this.showInfo("File was successfuly uploaded11111!");
-                this.formData = {
-                    displayFileName: null,
-                    uploadFileData: null,
-                    file: null
-                };
-            });
         },
 
         showInfo(message) {
