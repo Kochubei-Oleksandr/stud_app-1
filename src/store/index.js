@@ -15,8 +15,9 @@ const Store = new Vuex.Store({
       name: (localStorage.getItem('name')) ? localStorage.getItem('name') : null
     },
     isAuth: ( (localStorage.getItem('apiToken') == null) || (localStorage.getItem('apiToken') == "undefined") ) ? false : true,
+    showVipPosts: [],
     showPosts: [],
-    showPost:  [],
+/*     showPost:  [], */
     nav: [
       { path: "/user/personal", title: "Личный кабинет", auth: true }
     ],
@@ -31,12 +32,15 @@ const Store = new Vuex.Store({
   },
 
   mutations: {
+    loadVipShowPosts (state, data) {
+      state.showVipPosts = data
+    },
     loadShowPosts (state, data) {
       state.showPosts = data
     },
-    loadShowPost (state, data) {
+/*     loadShowPost (state, data) {
       state.showPost = data
-    },
+    }, */
     loadCatList (state, data) {
       state.categoriesList = data
     },
@@ -68,7 +72,7 @@ const Store = new Vuex.Store({
         context.commit('loadShowPosts', responce.data)
       })
     },
-    sortCategoryPost (context, params) {
+    /* sortCategoryPost (context, params) {
       return axios.post(API.sortCategory, JSON.stringify(params), {withCredentials: true})
       .then(responce => {
         context.commit('loadShowPosts', responce.data)
@@ -81,17 +85,23 @@ const Store = new Vuex.Store({
       })
     },
     showPostsLoad (context, params) {
-      return axios.post(API.products)
+      return axios.get(API.products + params.page)
         .then(responce => {
           context.commit('loadShowPosts', responce.data)
         })
-    },
-    showPostLoad (context, params) {      
+    }, */
+    /* showVipPostsLoad (context, params) {
+      return axios.get(API.productsVip)
+        .then(responce => {
+          context.commit('loadVipShowPosts', responce.data)
+        })
+    }, */
+    /* showPostLoad (context, params) {      
       return axios.get(API.product + params.id)
         .then(responce => {
         context.commit('loadShowPost', responce.data)
         })
-    },
+    }, */
     loadCategoriesList (context, params) {
       return axios.get(API.categoriesList)
         .then(responce => {

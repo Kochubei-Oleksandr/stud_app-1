@@ -7,13 +7,13 @@
           fixed
           app
           >
-            <v-btn flat depressed :to="{name: 'ShowPosts'}">Показать все объявления</v-btn>
-            <v-btn flat depressed :to="{name: 'MainPage'}">Показать все VIP-объявления</v-btn>
-            <div v-if="(('/' == this.$route.path) || ('/products' == this.$route.path))">
+            <v-btn v-on:click="sortAction" flat depressed :to="{name: 'ShowPosts', params: { page: 1 }}">Показать все объявления</v-btn>
+            <v-btn v-on:click="sortAction" flat depressed :to="{name: 'MainPage'}">Показать все VIP-объявления</v-btn>
+            <div>
                 <v-radio-group v-model="sortCost">
                     <p>Сортировка по стоимости</p>
                     <v-radio v-on:change="sortAction" label="Сначала дешевые" value="2"></v-radio>
-                    <v-radio v-on:change="sortAction" label="начала дорогие" value="1"></v-radio>
+                    <v-radio v-on:change="sortAction" label="Сначала дорогие" value="1"></v-radio>
                 </v-radio-group>
                 <v-radio-group v-model="sortDate">
                     <p>Сортировка по дате публикации</p>
@@ -43,7 +43,7 @@
                                 <v-list-tile-content>
                                     <v-list-tile avatar>
                                         <v-list-tile-action>
-                                            <v-checkbox v-on:change="sortCategoryAction" :id="child.id" :value="child.id" v-model="categories"></v-checkbox>
+                                            <v-checkbox v-on:change="sortAction" :id="child.id" :value="child.id" v-model="categories"></v-checkbox>
                                         </v-list-tile-action>
                                         <v-list-tile-content>
                                             <v-list-tile-title>{{ child.category }}</v-list-tile-title>
@@ -79,7 +79,7 @@
                                 <v-list-tile-content>
                                     <v-list-tile avatar>
                                         <v-list-tile-action>
-                                            <v-checkbox v-on:change="sortCategoryAction" :id="child.id" :value="child.id" v-model="cities"></v-checkbox>
+                                            <v-checkbox v-on:change="sortAction" :id="child.id" :value="child.id" v-model="cities"></v-checkbox>
                                         </v-list-tile-action>
                                         <v-list-tile-content>
                                             <v-list-tile-title>{{ child.city }}</v-list-tile-title>
@@ -101,11 +101,10 @@
         >
             <v-toolbar-title style="width: 300px" class="ml-0 pl-3">
                 <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
-                <v-btn flat depressed :to="{name: 'MainPage'}" class="hidden-sm-and-down">Baraholka</v-btn>
+                <v-btn v-on:click="sortAction" flat depressed :to="{name: 'MainPage'}" class="hidden-sm-and-down">Baraholka</v-btn>
             </v-toolbar-title>
             <v-text-field
-                v-if="(('/' == this.$route.path) || ('/products' == this.$route.path))"
-                v-on:keyup.enter="onEnterSearch"
+                v-on:keyup.enter="sortAction"
                 v-model="messageSearch"
                 flat
                 solo-inverted
@@ -134,7 +133,22 @@
             >{{ item.title }}
             </v-btn>
         </v-toolbar>
-      <router-view/>
+      <router-view></router-view>
+      <template>
+        <div class="text-xs-center">
+            <v-pagination :length="this.showPosts.count_post" v-on:click="prevPage(sortAction())" v-model="currentPage" :total-visible="7"></v-pagination>
+        </div>
+      </template>
+      <div>
+            <div class="pagination">
+                <div class="pagination__left"  v-on:click="prevPage(sortAction())">
+                    <router-link v-if="currentPage != 1" :to="{ name: 'ShowPosts', params: { page: (this.currentPage - 1)} }">Назад</router-link>
+                </div>
+                <div class="pagination__right"  v-on:click="nextPage(sortAction())">
+                    <router-link v-if="currentPage != showPosts.count_post" :to="{ name: 'ShowPosts', params: { page: (this.currentPage + 1) } }">Вперед</router-link>
+                </div>
+            </div>
+        </div>
     </v-app>
   </div>
 </template>
@@ -145,13 +159,14 @@ import { mapState } from "vuex";
 export default {
   name: 'App',
   data: () => ({
+      page: 1,
+      currentPage: 1,
       messageSearch: '',
       drawer: null,
       categories: [],
       cities: [],
       sortDate: '',
       sortCost: '',
-      sortPath: '',
       iconUp: 'keyboard_arrow_up',
       iconDown: 'keyboard_arrow_down',
       iconModel: false,
@@ -165,26 +180,36 @@ export default {
       ]
     }),
   computed: {
-      ...mapState(['nav','authNav','isAuth','categoriesList','cityList','regionList'])
+      ...mapState(['nav','authNav','isAuth','categoriesList','cityList','regionList', 'showPosts'])
   },
   created () {
     this.$store.dispatch('loadCategoriesList');
     this.$store.dispatch('loadCityList');
     this.$store.dispatch('loadRegionsList');
+    this.$store.dispatch('sortPost');
   },
   methods: {
-    onEnterSearch: function() {
-       ('/' == this.$route.path) ? this.sortPath = 'main' : this.sortPath = 'posts'
-        this.$nextTick(function () {
-            this.$store.dispatch('searchPost', {data: this.messageSearch})
-        })
-        .then(() => {
-            this.hasError = false
-        }).catch(err => {
-            if (err.response.status !== 200) {
-                this.hasError = true
-            }
-        })
+    nextPage: function() {
+        if (this.currentPage > this.showPosts.count_post) {
+            return this.currentPage = this.showPosts.count_post
+        } else {
+            return this.currentPage += 1
+        }
+    },
+    prevPage: function() {
+        if (this.currentPage < 2) {
+            return this.currentPage = 1
+        } else {
+            return this.currentPage -= 1
+        }
+    },
+    pathMain: function() {
+        var path = (/\//.test(this.$route.path))
+        return path
+    },
+    pathProducts: function() {
+        var path = (/products\/\d+/.test(this.$route.path))
+        return path
     },
     logoutActions: function () {
       this.$store.dispatch('logout', {token: localStorage.getItem('apiToken')})
@@ -200,31 +225,25 @@ export default {
         })
     },
     sortAction: function () {
-        ('/' == this.$route.path) ? this.sortPath = 'main' : this.sortPath = 'posts'
         this.$nextTick(function () {
-            this.$store.dispatch('sortPost', {date: this.sortDate, price: this.sortCost, path: this.sortPath})
-        })
-        .then(() => {
-            this.hasError = false
-        }).catch(err => {
-            if (err.response.status !== 200) {
-                this.hasError = true
-            }
-        })
-    },
-    sortCategoryAction: function () {
-        ('/' == this.$route.path) ? this.sortPath = 'main' : this.sortPath = 'posts'
-        this.$nextTick(function () {
-            this.$store.dispatch('sortCategoryPost', {categories: this.categories, cities: this.cities})
-        })
-        .then(() => {
-            this.hasError = false
-        }).catch(err => {
-            if (err.response.status !== 200) {
-                this.hasError = true
-            }
+            this.$store.dispatch('sortPost', {
+                cities: this.cities,
+                categories: this.categories,
+                data: this.messageSearch,
+                page: this.currentPage,
+                date: this.sortDate, 
+                price: this.sortCost,
+                path: this.$route.path
+            })
         })
     }
   }
 }
 </script>
+
+
+<style>
+    .application--wrap{
+        min-height: 0px;
+    }
+</style>

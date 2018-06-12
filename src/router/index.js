@@ -61,12 +61,12 @@ export default new Router({
       ]
     },
     {
-      path: '/products',
+      path: '/products/:page(\\d+)',
       name: 'ShowPosts',
       component: ShowPosts
     },
     {
-      path: '/products/:id(\\d+)',
+      path: '/product/:id(\\d+)',
       name: 'ShowPost',
       component: ShowPost
     },

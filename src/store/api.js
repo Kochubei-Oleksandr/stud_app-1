@@ -3,7 +3,7 @@ export default {
   register: process.env.API_URL + '/register',
   logout: process.env.API_URL + '/logout',
 
-  products: process.env.API_URL + '/products',
+  products: process.env.API_URL + '/products/',
   productsVip: process.env.API_URL,
   product: process.env.API_URL + '/product/',
 
