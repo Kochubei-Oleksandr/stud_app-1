@@ -16,6 +16,7 @@ const Store = new Vuex.Store({
     },
     isAuth: ( (localStorage.getItem('apiToken') == null) || (localStorage.getItem('apiToken') == "undefined") ) ? false : true,
     showPosts: [],
+    adminPosts: [],
     myPosts: [],
 /*     showPost:  [], */
     nav: [
@@ -37,6 +38,9 @@ const Store = new Vuex.Store({
     },
     loadShowPosts (state, data) {
       state.showPosts = data
+    },
+    loadShowAdminPosts (state, data) {
+      state.adminPosts = data
     },
     loadCatList (state, data) {
       state.categoriesList = data
@@ -67,6 +71,12 @@ const Store = new Vuex.Store({
       return axios.post(API.sort, JSON.stringify(params), {withCredentials: true})
       .then(responce => {
         context.commit('loadShowPosts', responce.data)
+      })
+    },
+    sortPostAdmin (context, params) {
+      return axios.post(API.sortAdmin, JSON.stringify(params), {withCredentials: true})
+      .then(responce => {
+        context.commit('loadShowAdminPosts', responce.data)
       })
     },
     loadMyPosts (context, params) {

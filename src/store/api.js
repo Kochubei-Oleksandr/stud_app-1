@@ -16,6 +16,7 @@ export default {
   statusList: process.env.API_URL + '/status-list',
 
   sort: process.env.API_URL + '/sort',
+  sortAdmin: process.env.API_URL + '/sort-admin',
   myPosts: process.env.API_URL + '/my-posts'
 
 

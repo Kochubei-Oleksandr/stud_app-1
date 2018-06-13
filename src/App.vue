@@ -7,9 +7,9 @@
           fixed
           app
           >
-            <v-btn flat depressed :to="{name: 'ShowPosts', params: { page: 1 }}">Показать все объявления</v-btn>
-            <v-btn flat depressed :to="{name: 'MainPage', params: { page: 1 }}">Показать все VIP-объявления</v-btn>
-            <div v-if="((postsPage() == true) || (vipsPage() == true))" v-on:click="forStart(sortAction())">
+            <v-btn  v-on:click="forStart(sortAction())" flat depressed :to="{name: 'ShowPosts', params: { page: 1 }}">Показать все объявления</v-btn>
+            <v-btn  v-on:click="forStart(sortAction())" flat depressed :to="{name: 'MainPage', params: { page: 1 }}">Показать все VIP-объявления</v-btn>
+            <div v-if="((postsPage() == true) || (vipsPage() == true))">
                 <div>
                     <p>Сортировка по дате публикации</p>
                     <v-checkbox v-on:change="sortAction" v-model="sortDate" label="Сначала новые" value="1"></v-checkbox>
@@ -103,8 +103,8 @@
                 <v-btn v-on:click="forStart(sortAction())" flat depressed :to="{name: 'MainPage', params: { page: 1 }}" class="hidden-sm-and-down">Baraholka</v-btn>
             </v-toolbar-title>
             <v-text-field
-                v-if="((postsPage() == true) || (vipsPage() == true))" v-on:click="forStart(sortAction())"
-                v-on:keyup.enter="sortAction"
+                v-if="((postsPage() == true) || (vipsPage() == true))"
+                v-on:keyup.enter="forStart(sortAction())"
                 v-model="messageSearch"
                 flat
                 solo-inverted
@@ -135,7 +135,7 @@
         </v-toolbar>
       <router-view></router-view>
 
-        <div v-if="((/products\/\d+/.test(this.$route.path)) == true)" class="pagination">
+        <div v-if="((/products\/\d+/.test(this.$route.path)) == true)" class="pagination__main">
             <div class="pagination__left"  v-on:click="prevPage(sortAction())">
                 <router-link v-if="currentPage != 1" :to="{ name: 'ShowPosts', params: { page: (this.currentPage - 1)} }">Назад</router-link>
             </div>
@@ -144,7 +144,7 @@
             </div>
         </div>
 
-        <div v-if="((/^\/\d+/.test(this.$route.path)) == true)" class="pagination">
+        <div v-if="((/^\/\d+/.test(this.$route.path)) == true)" class="pagination__main">
             <div class="pagination__left"  v-on:click="prevPage(sortAction())">
                 <router-link v-if="currentPage != 1" :to="{ name: 'MainPage', params: { page: (this.currentPage - 1)} }">Назад</router-link>
             </div>
@@ -255,7 +255,7 @@ export default {
     min-height: 0px;
 }
 /* Пагинация */
-.pagination {
+.pagination__main {
   width: 100%;
   height: 44px;
   display: flex;
@@ -281,7 +281,7 @@ export default {
   float: right;
 }
 
-.pagination a, .pagination span {
+.pagination__main a, .pagination__main span {
   display: block;
   text-align: center;
   font-family: Helvetica, Arial, sans-serif;
@@ -292,7 +292,7 @@ export default {
   font-size: 18px;
 }
 
-.pagination a {
+.pagination__main a {
   padding: 0 20px;
   max-width: 160px;
   background-color: transparent;
@@ -303,13 +303,13 @@ export default {
   transition: all .2s ease-in-out;
 }
 
-.pagination a.current {
+.pagination__main a.current {
   border-color: #ea4c89;
   color: #ea4c89;
 }
 
 @media (hover) {
-   .pagination a:hover {
+   .pagination__main a:hover {
       border-color: #ea4c89;
       color: #ea4c89;
    }

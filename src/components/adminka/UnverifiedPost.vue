@@ -2,8 +2,19 @@
     <v-app id="inspire">
             <v-container fluid grid-list-xl>
                 <v-layout row wrap>
+                    <v-flex xs12 sm2 md2>
+                        <v-checkbox v-on:change="sortAction" v-model="sortDate" label="Сначала новые" value="1"></v-checkbox>
+                    </v-flex>
+                    <v-flex xs12 sm2 md2>
+                        <v-checkbox v-on:change="sortAction" v-model="sortDate" label="Сначала старые" value="2"></v-checkbox>
+                    </v-flex>
+                    <v-flex xs12 sm2 md2>
+                        <v-checkbox v-on:change="sortAction" v-model="sortVip" label="Только VIP" value="1"></v-checkbox>
+                    </v-flex>
+                </v-layout>
+                <v-layout row wrap>
                     <v-flex flex xs12 sm4 md3 lg2 xl2 
-                    v-for="list in lists"
+                    v-for="list in lists.data"
                     v-if="list.moderate == 0"
                     :key="list.id">
                         <v-card 
@@ -25,6 +36,11 @@
                         </v-card>
                     </v-flex>
                 </v-layout>
+                <template>
+                    <div class="text-xs-center">
+                        <v-pagination @input="sortAction" :length="lists.count_post" v-model="page" :total-visible="7"></v-pagination>
+                    </div>
+                </template>
             </v-container>
     </v-app>
 </template>
@@ -35,19 +51,39 @@ import { mapState } from 'vuex'
 export default {
     data () {
         return {
+            page: 1,
+            sortDate: '',
+            sortVip: '',
             token: localStorage.getItem('apiToken'),
-            idPost: ''
+            idPost: '',
+            moderated: '0'
         }
     },
   computed: {
     ...mapState({
-      lists: 'myPosts', user: 'user'
+      lists: 'adminPosts', user: 'user'
     })
   },
   created () {
-    this.$store.dispatch('loadMyPosts', {params: {token: localStorage.getItem('apiToken')} });    
+    this.$store.dispatch('sortPostAdmin', 
+        {
+            token: localStorage.getItem('apiToken'),
+            moderated: this.moderated
+        } 
+    );    
   },
   methods: {
+    sortAction: function (page) {
+        this.$nextTick(function () {
+            this.$store.dispatch('sortPostAdmin', {
+                page: this.page,
+                date: this.sortDate,
+                vip: this.sortVip, 
+                token: this.token,
+                moderated: this.moderated
+            })
+        })
+    },
     deletePostAction: function (id) {
         this.idPost = id
         this.$store.dispatch('deletePost', {data: {token: this.token, idPost: this.idPost} })
