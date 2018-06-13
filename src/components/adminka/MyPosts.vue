@@ -3,7 +3,7 @@
             <v-container fluid grid-list-xl>
                 <v-layout row wrap>
                     <v-flex flex xs12 sm4 md3 lg2 xl2 
-                    v-for="list in lists.data"
+                    v-for="list in lists"
                     v-if="((list.id_user == user.userId) && (list.moderate == 1))"
                     :key="list.id">
                         <v-card 
@@ -41,11 +41,11 @@ export default {
     },
   computed: {
     ...mapState({
-      lists: 'showPosts', user: 'user'
+      lists: 'myPosts', user: 'user'
     })
   },
   created () {
-    //this.$store.dispatch('sortPost');  
+    this.$store.dispatch('loadMyPosts', {params: {token: localStorage.getItem('apiToken')} });  
   },
   methods: {
     deletePostAction: function (id) {

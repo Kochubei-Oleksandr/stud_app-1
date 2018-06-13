@@ -190,30 +190,21 @@ export default {
 
             let data = new FormData();
             data.append("fupload", this.formData.file);
+            data.append("title", this.title);
+            data.append("text", this.text);
+            data.append("telephone", this.telephone);
+            data.append("price", this.price);
+            data.append("img", this.img);
+            data.append("idPostCategory", this.idPostCategory);
+            data.append("idCity", this.idCity);
+            data.append("idStatus", this.idStatus);
+            data.append("token", this.token);
 
-            axios.post("http://game/upload_file", data, {withCredentials: true}).then(response => {
-                this.showInfo(data);
-                this.formData = {
-                    displayFileName: null,
-                    uploadFileData: null,
-                    file: null
-                };
-            });
-
-            this.$store.dispatch('createdPost', {
-                title: this.title,
-                text: this.text,
-                telephone: this.telephone,
-                price: this.price,
-                img: this.img,
-                idPostCategory: this.idPostCategory,
-                idCity: this.idCity,
-                idStatus: this.idStatus,
-                token: this.token
-            })
+            this.$store.dispatch('createdPost', data)
             .then(() => {
                 this.hasError = false
                 this.$router.push({name: 'MyPosts'})
+                
             }).catch(err => {
                 if (err.response.status !== 200) {
                     this.hasError = true

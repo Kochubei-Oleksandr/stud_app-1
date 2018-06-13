@@ -4,8 +4,8 @@ export default {
   logout: process.env.API_URL + '/logout',
 
   products: process.env.API_URL + '/products/',
-  productsVip: process.env.API_URL,
   product: process.env.API_URL + '/product/',
+  productUpdate: process.env.API_URL + '/product-update',
 
   categoriesList: process.env.API_URL + '/categories-list',
   cityList: process.env.API_URL + '/city-list',
@@ -16,8 +16,15 @@ export default {
   statusList: process.env.API_URL + '/status-list',
 
   sort: process.env.API_URL + '/sort',
-  sortCategory: process.env.API_URL + '/sort-category',
-  search: process.env.API_URL + '/search-post',
+  myPosts: process.env.API_URL + '/my-posts'
+
+
+
+
+ /*  addPhoto: process.env.API_URL + '/upload_file',
+  changePhoto: process.env.API_URL + '/change_file' */
+  /* sortCategory: process.env.API_URL + '/sort-category',
+  search: process.env.API_URL + '/search-post', */
   // product: process.env.API_URL + '/products/#{id}'
   // login: process.env.API_URL + '/login',
   // logout: process.env.API_URL + '/logout',

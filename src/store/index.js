@@ -15,8 +15,8 @@ const Store = new Vuex.Store({
       name: (localStorage.getItem('name')) ? localStorage.getItem('name') : null
     },
     isAuth: ( (localStorage.getItem('apiToken') == null) || (localStorage.getItem('apiToken') == "undefined") ) ? false : true,
-    showVipPosts: [],
     showPosts: [],
+    myPosts: [],
 /*     showPost:  [], */
     nav: [
       { path: "/user/personal", title: "Личный кабинет", auth: true }
@@ -32,15 +32,12 @@ const Store = new Vuex.Store({
   },
 
   mutations: {
-    loadVipShowPosts (state, data) {
-      state.showVipPosts = data
+    loadShowMyPosts (state, data) {
+      state.myPosts = data
     },
     loadShowPosts (state, data) {
       state.showPosts = data
     },
-/*     loadShowPost (state, data) {
-      state.showPost = data
-    }, */
     loadCatList (state, data) {
       state.categoriesList = data
     },
@@ -70,6 +67,12 @@ const Store = new Vuex.Store({
       return axios.post(API.sort, JSON.stringify(params), {withCredentials: true})
       .then(responce => {
         context.commit('loadShowPosts', responce.data)
+      })
+    },
+    loadMyPosts (context, params) {
+      return axios.get(API.myPosts, params)
+      .then(responce => {
+        context.commit('loadShowMyPosts', responce.data)
       })
     },
     /* sortCategoryPost (context, params) {
@@ -148,21 +151,21 @@ const Store = new Vuex.Store({
       })
     },
     createdPost (context, params) {
-      return axios.post(API.product, JSON.stringify(params), {withCredentials: true})
+      return axios.post(API.product, params, {withCredentials: true})
       .then(responce => {
-        alert ('Запись добавлена успешно!');
+        alert('Запись была успешно добавлена')
       })
     },
     deletePost (context, params) {
       return axios.delete(API.product, params)
       .then(responce => {
-        alert ('Запись удалена успешно!');
+        alert('Запись была успешно удалена')
       })
     },
     updatePost (context, params) {
-      return axios.put(API.product, params)
+      return axios.post(API.productUpdate, params, {withCredentials: true})
       .then(responce => {
-        alert ('Запись изменена успешно!');
+        alert('Запись была успешно изменена')
       })
     }
   }

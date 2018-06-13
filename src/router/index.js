@@ -4,8 +4,10 @@ import Login from '@/components/auth/Login'
 import Register from '@/components/auth/Register'
 import Page404 from '@/components/Page404'
 import ShowPosts from '@/components/posts/ShowPosts'
+import ShowMainPosts from '@/components/posts/ShowMainPosts'
 import ShowPost from '@/components/posts/ShowPost'
 import MainPage from '@/components/posts/MainPage'
+import Main from '@/components/posts/Main'
 import User from '@/components/adminka/User'
 import AddPost from '@/components/adminka/AddPost'
 import MyPosts from '@/components/adminka/MyPosts'
@@ -20,6 +22,11 @@ export default new Router({
   routes: [
     {
       path: '/',
+      name: 'Main',
+      component: Main
+    },
+    {
+      path: '/:page(\\d+)',
       name: 'MainPage',
       component: MainPage
     },
@@ -59,6 +66,11 @@ export default new Router({
           component: UnverifiedPost
         }
       ]
+    },
+    {
+      path: '/products/',
+      name: 'ShowMainPosts',
+      component: ShowMainPosts
     },
     {
       path: '/products/:page(\\d+)',

@@ -41,11 +41,11 @@ export default {
     },
   computed: {
     ...mapState({
-      lists: 'showPosts', user: 'user'
+      lists: 'myPosts', user: 'user'
     })
   },
   created () {
-    this.$store.dispatch('showPostsLoad');  
+    this.$store.dispatch('loadMyPosts', {params: {token: localStorage.getItem('apiToken')} });    
   },
   methods: {
     deletePostAction: function (id) {

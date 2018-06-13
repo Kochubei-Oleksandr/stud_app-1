@@ -2,7 +2,7 @@
     <v-app id="inspire">
         <v-content style="padding-top: 0;">
             <v-container fluid grid-list-xl>
-                <h2>VIP-объявления на baraholka.pp.ua</h2>
+                <h2>Все объявления на baraholka.pp.ua</h2>
                 <v-layout row wrap align-center>
                     <v-flex flex xs12 sm4 md3 lg2 xl2 v-for="list in showPosts.data" :key="list.id" v-if="list.moderate == 1">
                         <v-card :to="{ name: 'ShowPost', params: { id: list.id } }" class="" hover>
@@ -20,6 +20,13 @@
                     </v-flex>
                 </v-layout>
             </v-container>
+            <v-container grid-list-xl text-xs-center>
+                <v-layout row wrap>
+                    <v-flex xs10 offset-xs1>
+                        <v-btn v-on:click="sortAction" color="primary" flat :to="{name: 'ShowPosts', params: { page: 1 }}">Смотреть все объявления</v-btn>
+                    </v-flex>
+                </v-layout>
+            </v-container>
         </v-content>
     </v-app>
 </template>
@@ -30,6 +37,22 @@ import { mapState } from "vuex";
 export default {
   computed: {
       ...mapState(['showPosts'])
+  },
+  methods: {
+    sortAction: function () {
+        this.$nextTick(function () {
+            this.$store.dispatch('sortPost', {
+                cities: this.cities,
+                categories: this.categories,
+                data: this.messageSearch,
+                page: this.currentPage,
+                date: this.sortDate, 
+                price: this.sortCost,
+                path: this.$route.path
+            })
+        })
+    }
   }
 }
 </script>
+

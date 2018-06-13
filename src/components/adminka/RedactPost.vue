@@ -140,11 +140,6 @@
                     <div v-if="readyToUpload">
                         <img :src="formData.uploadFileData" class="preview-image">
                     </div>
-
-                    <v-btn v-if="readyToUpload" @click="uploadImage">
-                        <v-icon left>cloud_upload</v-icon>
-                        Upload File
-                    </v-btn>
                 </div>
             </v-form>
         </v-card-text>
@@ -241,20 +236,22 @@ export default {
     },
    methods: {
         updatePostAction: function () {
-            this.$store.dispatch('updatePost', {
-                idModerate: this.idModerate,
-                idVip: this.idVip,
-                idPost: this.idPost,
-                title: this.title,
-                text: this.text,
-                telephone: this.telephone,
-                price: this.price,
-                img: this.img,
-                idPostCategory: this.idPostCategory,
-                idCity: this.idCity,
-                idStatus: this.idStatus,
-                token: this.token
-            })
+            let data = new FormData();
+            data.append("idModerate", this.idModerate);
+            data.append("idVip", this.idVip);
+            data.append("idPost", this.idPost);
+            data.append("fupload", this.formData.file);
+            data.append("title", this.title);
+            data.append("text", this.text);
+            data.append("telephone", this.telephone);
+            data.append("price", this.price);
+            data.append("img", this.img);
+            data.append("idPostCategory", this.idPostCategory);
+            data.append("idCity", this.idCity);
+            data.append("idStatus", this.idStatus);
+            data.append("token", this.token);
+
+            this.$store.dispatch('updatePost', data)
             .then(() => {
                 this.hasError = false
                 if (this.isAdmin == false) {
@@ -293,20 +290,6 @@ export default {
 
         calcSize(size) {
             return Math.round(size / 1024);
-        },
-
-        uploadImage() {
-            let data = new FormData();
-            data.append("fupload", this.formData.file);
-
-            axios.post("http://game/upload_file", data).then(response => {
-                this.showInfo("File was successfuly uploaded!");
-                this.formData = {
-                    displayFileName: null,
-                    uploadFileData: null,
-                    file: null
-                };
-            });
         },
 
         showInfo(message) {

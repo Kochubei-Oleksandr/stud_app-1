@@ -20,6 +20,13 @@
                     </v-flex>
                 </v-layout>
             </v-container>
+            <v-container grid-list-xl text-xs-center>
+                <v-layout row wrap>
+                    <v-flex xs10 offset-xs1>
+                        <v-btn color="primary" flat :to="{name: 'MainPage', params: { page: 1 }}">Смотреть все VIP объявления</v-btn>
+                    </v-flex>
+                </v-layout>
+            </v-container>
         </v-content>
     </v-app>
 </template>
@@ -30,6 +37,9 @@ import { mapState } from "vuex";
 export default {
   computed: {
       ...mapState(['showPosts'])
-  }
+  } 
 }
 </script>
+
+
+

@@ -7,19 +7,18 @@
           fixed
           app
           >
-            <v-btn v-on:click="sortAction" flat depressed :to="{name: 'ShowPosts', params: { page: 1 }}">Показать все объявления</v-btn>
-            <v-btn v-on:click="sortAction" flat depressed :to="{name: 'MainPage'}">Показать все VIP-объявления</v-btn>
-            <div>
-                <v-radio-group v-model="sortCost">
-                    <p>Сортировка по стоимости</p>
-                    <v-radio v-on:change="sortAction" label="Сначала дешевые" value="2"></v-radio>
-                    <v-radio v-on:change="sortAction" label="Сначала дорогие" value="1"></v-radio>
-                </v-radio-group>
-                <v-radio-group v-model="sortDate">
+            <v-btn flat depressed :to="{name: 'ShowPosts', params: { page: 1 }}">Показать все объявления</v-btn>
+            <v-btn flat depressed :to="{name: 'MainPage', params: { page: 1 }}">Показать все VIP-объявления</v-btn>
+            <div v-if="((postsPage() == true) || (vipsPage() == true))" v-on:click="forStart(sortAction())">
+                <div>
                     <p>Сортировка по дате публикации</p>
-                    <v-radio v-on:change="sortAction" label="Сначала новые" value="1"></v-radio>
-                    <v-radio v-on:change="sortAction" label="Сначала старые" value="2"></v-radio>
-                </v-radio-group>
+                    <v-checkbox v-on:change="sortAction" v-model="sortDate" label="Сначала новые" value="1"></v-checkbox>
+                    <v-checkbox v-on:change="sortAction" v-model="sortDate" label="Сначала старые" value="2"></v-checkbox>
+
+                    <p>Сортировка по стоимости</p>
+                    <v-checkbox v-on:change="sortAction" v-model="sortCost" label="Сначала дешевые" value="2">></v-checkbox>
+                    <v-checkbox v-on:change="sortAction" v-model="sortCost" label="Сначала дорогие" value="1">></v-checkbox>
+                </div>
                 <v-list dense>
                     <template v-for="item in items1">
                         <v-list-group
@@ -101,9 +100,10 @@
         >
             <v-toolbar-title style="width: 300px" class="ml-0 pl-3">
                 <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
-                <v-btn v-on:click="sortAction" flat depressed :to="{name: 'MainPage'}" class="hidden-sm-and-down">Baraholka</v-btn>
+                <v-btn v-on:click="forStart(sortAction())" flat depressed :to="{name: 'MainPage', params: { page: 1 }}" class="hidden-sm-and-down">Baraholka</v-btn>
             </v-toolbar-title>
             <v-text-field
+                v-if="((postsPage() == true) || (vipsPage() == true))" v-on:click="forStart(sortAction())"
                 v-on:keyup.enter="sortAction"
                 v-model="messageSearch"
                 flat
@@ -134,21 +134,25 @@
             </v-btn>
         </v-toolbar>
       <router-view></router-view>
-      <template>
-        <div class="text-xs-center">
-            <v-pagination :length="this.showPosts.count_post" v-on:click="prevPage(sortAction())" v-model="currentPage" :total-visible="7"></v-pagination>
-        </div>
-      </template>
-      <div>
-            <div class="pagination">
-                <div class="pagination__left"  v-on:click="prevPage(sortAction())">
-                    <router-link v-if="currentPage != 1" :to="{ name: 'ShowPosts', params: { page: (this.currentPage - 1)} }">Назад</router-link>
-                </div>
-                <div class="pagination__right"  v-on:click="nextPage(sortAction())">
-                    <router-link v-if="currentPage != showPosts.count_post" :to="{ name: 'ShowPosts', params: { page: (this.currentPage + 1) } }">Вперед</router-link>
-                </div>
+
+        <div v-if="((/products\/\d+/.test(this.$route.path)) == true)" class="pagination">
+            <div class="pagination__left"  v-on:click="prevPage(sortAction())">
+                <router-link v-if="currentPage != 1" :to="{ name: 'ShowPosts', params: { page: (this.currentPage - 1)} }">Назад</router-link>
+            </div>
+            <div class="pagination__right"  v-on:click="nextPage(sortAction())">
+                <router-link v-if="currentPage != showPosts.count_post" :to="{ name: 'ShowPosts', params: { page: (this.currentPage + 1) } }">Вперед</router-link>
             </div>
         </div>
+
+        <div v-if="((/^\/\d+/.test(this.$route.path)) == true)" class="pagination">
+            <div class="pagination__left"  v-on:click="prevPage(sortAction())">
+                <router-link v-if="currentPage != 1" :to="{ name: 'MainPage', params: { page: (this.currentPage - 1)} }">Назад</router-link>
+            </div>
+            <div class="pagination__right"  v-on:click="nextPage(sortAction())">
+                <router-link v-if="currentPage != showPosts.count_post" :to="{ name: 'MainPage', params: { page: (this.currentPage + 1) } }">Вперед</router-link>
+            </div>
+        </div>
+        
     </v-app>
   </div>
 </template>
@@ -159,8 +163,8 @@ import { mapState } from "vuex";
 export default {
   name: 'App',
   data: () => ({
-      page: 1,
       currentPage: 1,
+      page: 1,
       messageSearch: '',
       drawer: null,
       categories: [],
@@ -183,12 +187,24 @@ export default {
       ...mapState(['nav','authNav','isAuth','categoriesList','cityList','regionList', 'showPosts'])
   },
   created () {
+    this.$store.dispatch('sortPost');  
+  },
+  created () {
     this.$store.dispatch('loadCategoriesList');
     this.$store.dispatch('loadCityList');
     this.$store.dispatch('loadRegionsList');
     this.$store.dispatch('sortPost');
   },
   methods: {
+    postsPage: function() {
+        return /products\/\d+/.test(this.$route.path)
+    },
+    vipsPage: function() {
+        return /\/\d+/.test(this.$route.path)
+    },
+    forStart: function() {
+        this.currentPage = 1
+    },
     nextPage: function() {
         if (this.currentPage > this.showPosts.count_post) {
             return this.currentPage = this.showPosts.count_post
@@ -202,14 +218,6 @@ export default {
         } else {
             return this.currentPage -= 1
         }
-    },
-    pathMain: function() {
-        var path = (/\//.test(this.$route.path))
-        return path
-    },
-    pathProducts: function() {
-        var path = (/products\/\d+/.test(this.$route.path))
-        return path
     },
     logoutActions: function () {
       this.$store.dispatch('logout', {token: localStorage.getItem('apiToken')})
@@ -243,7 +251,83 @@ export default {
 
 
 <style>
-    .application--wrap{
-        min-height: 0px;
-    }
+.application--wrap{
+    min-height: 0px;
+}
+/* Пагинация */
+.pagination {
+  width: 100%;
+  height: 44px;
+  display: flex;
+  justify-content: space-between;
+  margin: 30px auto 30px;
+  padding: 0 15px;
+  max-width: 1280px;
+}
+
+.pagination__left, .pagination__right {
+  width: 20%;
+}
+
+.pagination__left {
+  float: left;
+}
+
+.pagination__right {
+  float: right;
+}
+
+.pagination__right a {
+  float: right;
+}
+
+.pagination a, .pagination span {
+  display: block;
+  text-align: center;
+  font-family: Helvetica, Arial, sans-serif;
+  font-weight: 300;
+  line-height: 42px;
+  height: 44px;
+  color: #999;
+  font-size: 18px;
+}
+
+.pagination a {
+  padding: 0 20px;
+  max-width: 160px;
+  background-color: transparent;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  text-decoration: none;
+  margin: 0 6px;
+  transition: all .2s ease-in-out;
+}
+
+.pagination a.current {
+  border-color: #ea4c89;
+  color: #ea4c89;
+}
+
+@media (hover) {
+   .pagination a:hover {
+      border-color: #ea4c89;
+      color: #ea4c89;
+   }
+}
+
+.pagination__mid {
+  display: flex;
+  justify-content: center;
+  width: 60%;
+}
+
+.pagination__mid ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.pagination__mid li {
+  display: inline-block;
+}
 </style>
