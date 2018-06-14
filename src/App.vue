@@ -7,19 +7,21 @@
           fixed
           app
           >
-            <v-btn  v-on:click="forStart(sortAction())" flat depressed :to="{name: 'ShowPosts', params: { page: 1 }}">Показать все объявления</v-btn>
-            <v-btn  v-on:click="forStart(sortAction())" flat depressed :to="{name: 'MainPage', params: { page: 1 }}">Показать все VIP-объявления</v-btn>
+            <v-btn class="navigation__first__btn" style="color: #135DB1" v-on:click="forStart(sortAction())" flat depressed :to="{name: 'ShowPosts', params: { page: 1 }}">Показать все объявления</v-btn>
+            <v-btn style="color: #135DB1" v-on:click="forStart(sortAction())" flat depressed :to="{name: 'MainPage', params: { page: 1 }}">Показать все VIP-объявления</v-btn>
             <div v-if="((postsPage() == true) || (vipsPage() == true))">
-                <div>
-                    <p>Сортировка по дате публикации</p>
-                    <v-checkbox v-on:change="sortAction" v-model="sortDate" label="Сначала новые" value="1"></v-checkbox>
-                    <v-checkbox v-on:change="sortAction" v-model="sortDate" label="Сначала старые" value="2"></v-checkbox>
-
-                    <p>Сортировка по стоимости</p>
-                    <v-checkbox v-on:change="sortAction" v-model="sortCost" label="Сначала дешевые" value="2">></v-checkbox>
-                    <v-checkbox v-on:change="sortAction" v-model="sortCost" label="Сначала дорогие" value="1">></v-checkbox>
+                <div class="navigation__sort__p">
+                    <p>Сортировка по дате публикации:</p>
+                    <v-checkbox hide-details v-on:change="sortAction" v-model="sortDate" label="Сначала новые" value="1"></v-checkbox>
+                    <v-checkbox hide-details v-on:change="sortAction" v-model="sortDate" label="Сначала старые" value="2"></v-checkbox>
+                </div>
+                <div class="navigation__sort__p">
+                    <p>Сортировка по стоимости:</p>
+                    <v-checkbox hide-details v-on:change="sortAction" v-model="sortCost" label="Сначала дешевые" value="2">></v-checkbox>
+                    <v-checkbox hide-details v-on:change="sortAction" v-model="sortCost" label="Сначала дорогие" value="1">></v-checkbox>
                 </div>
                 <v-list dense>
+                    <p class="navigation__sort__p">Выберите нужную категорию:</p>
                     <template v-for="item in items1">
                         <v-list-group
                         v-model="item.model"
@@ -54,7 +56,7 @@
                     </template>
                 </v-list>
                 <v-list dense>
-                    <v-list-tile-title>Выберите нужный регион</v-list-tile-title>
+                    <p class="navigation__sort__p">Выберите нужный регион:</p>
                     <template v-for="item in regionList">
                         <v-list-group
                         v-model="item.model"
@@ -100,7 +102,7 @@
         >
             <v-toolbar-title style="width: 300px" class="ml-0 pl-3">
                 <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
-                <v-btn v-on:click="forStart(sortAction())" flat depressed :to="{name: 'MainPage', params: { page: 1 }}" class="hidden-sm-and-down">Baraholka</v-btn>
+                <v-btn flat depressed :to="{name: 'Main'}" class="hidden-sm-and-down">Baraholka</v-btn>
             </v-toolbar-title>
             <v-text-field
                 v-if="((postsPage() == true) || (vipsPage() == true))"
@@ -122,7 +124,7 @@
             >{{ item.title }}
             </v-btn>
 
-            <v-btn flat v-if="isAuth == true" @click="logoutActions" :to="{name: 'MainPage'}">Выйти</v-btn>
+            <v-btn exact flat v-if="isAuth == true" @click="logoutActions" :to="{name: 'MainPage'}">Выйти</v-btn>
 
             <v-btn
                 flat
@@ -224,7 +226,7 @@ export default {
         .then(() => {
           this.hasError = false
           if (this.isAuth){
-            this.$router.push({name: 'MainPage'})
+            this.$router.push({name: 'MainPage', params: { page: 1 }})
           }
         }).catch(err => {
           if (err.response.status !== 200) {
@@ -251,7 +253,22 @@ export default {
 
 
 <style>
-.application--wrap{
+.navigation__first__btn {
+    color: #135DB1;
+    margin-top: 16px;
+}
+.navigation__sort__p{
+    text-align: left;
+    margin: 16px 10px 0 14px;
+}
+.navigation__sort__p p {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.btn__content:before {
+    opacity: .0;
+}
+.application--wrap {
     min-height: 0px;
 }
 /* Пагинация */

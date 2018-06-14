@@ -1,31 +1,30 @@
 <template>
     <v-app id="inspire">
-            <v-container fluid grid-list-xl>
-                <v-layout row wrap>
-                    <v-flex flex xs12 sm4 md3 lg2 xl2 
-                    v-for="list in lists"
-                    v-if="((list.id_user == user.userId) && (list.moderate == 1))"
-                    :key="list.id">
-                        <v-card 
-                        hover>
-                            <v-card-media
-                            class="white--text"
-                            height="150px"
-                            :src="list.img"
-                            >
-                            </v-card-media>
-                            <v-card-text style="padding: 0;">
-                                {{ list.title }}
-                                <p style="margin-bottom: 0;">Стоимость: {{ list.price }}</p>
-                            </v-card-text>
-                            <v-card-actions>
-                                <v-btn :to="{ name: 'RedactPost', params: { lists: list } }" flat color="orange">Изменить</v-btn>
-                                <v-btn @click="deletePostAction(list.id)" flat color="orange">Удалить</v-btn>
-                            </v-card-actions>
-                        </v-card>
-                    </v-flex>
-                </v-layout>
-            </v-container>
+        <v-container fluid grid-list-xl>
+            <v-layout row wrap>
+                <v-flex flex xs12 sm6 md3 lg3 xl2 
+                v-for="list in myPosts"
+                :key="list.id">
+                    <v-card 
+                    hover>
+                        <v-card-media
+                        class="white--text"
+                        height="150px"
+                        :src="list.img"
+                        >
+                        </v-card-media>
+                        <v-card-text style="padding: 0;">
+                            {{ list.title }}
+                            <p style="margin-bottom: 0;">Стоимость: {{ list.price }}</p>
+                        </v-card-text>
+                        <v-card-actions>
+                            <v-btn :to="{ name: 'RedactPost', params: { myPosts: list } }" flat color="orange">Изменить</v-btn>
+                            <v-btn @click="deletePostAction(list.id)" flat color="orange">Удалить</v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-flex>
+            </v-layout>
+        </v-container>
     </v-app>
 </template>
 
@@ -40,9 +39,7 @@ export default {
         }
     },
   computed: {
-    ...mapState({
-      lists: 'myPosts', user: 'user'
-    })
+      ...mapState(['myPosts'])
   },
   created () {
     this.$store.dispatch('loadMyPosts', {params: {token: localStorage.getItem('apiToken')} });  
