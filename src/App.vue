@@ -137,10 +137,33 @@
         </v-toolbar>
       <router-view></router-view>
 
+        <!-- <div v-if="((/products\/\d+/.test(this.$route.path)) == true)" class="pagination__main">
+            <div class="pagination__left"  v-on:click="prevPage(sortAction())">
+                <router-link v-if="currentPage != 1" :to="{ name: 'ShowPosts', params: { page: (this.currentPage - 1)} }">Назад</router-link>
+            </div>
+            <div class="pagination__right"  v-on:click="nextPage(sortAction())">
+                <router-link v-if="currentPage != showPosts.count_post" :to="{ name: 'ShowPosts', params: { page: (this.currentPage + 1) } }">Вперед</router-link>
+            </div>
+        </div> -->
         <div v-if="((/products\/\d+/.test(this.$route.path)) == true)" class="pagination__main">
             <div class="pagination__left"  v-on:click="prevPage(sortAction())">
                 <router-link v-if="currentPage != 1" :to="{ name: 'ShowPosts', params: { page: (this.currentPage - 1)} }">Назад</router-link>
             </div>
+
+            <div class="pagination__mid">
+              <ul>
+                <li v-if="hasFirst()" @click.prevent="firstPage(sortAction())"><router-link :to="{ name: 'ShowPosts', params: { page: 1} }">1</router-link></li>
+                <li v-if="hasFirst()">...</li>
+                
+                <li v-if="hasFirstPrev()" @click.prevent="prevPage(sortAction())"><router-link :to="{ name: 'ShowPosts', params: { page: (this.currentPage - 1)} }">{{ currentPage-1 }}</router-link></li>
+                <li><a class="page_active">{{ currentPage }}</a></li>
+                <li v-if="hasLastNext()" @click.prevent="nextPage(sortAction())"><router-link :to="{ name: 'ShowPosts', params: { page: (this.currentPage + 1)} }">{{ currentPage+1 }}</router-link></li>
+
+                <li v-if="hasLast()">...</li>
+                <li v-if="hasLast()" @click.prevent="lastPage(sortAction())"><router-link :to="{ name: 'ShowPosts', params: { page: (this.showPosts.count_post)} }">{{ showPosts.count_post }}</router-link></li>
+              </ul>
+            </div>
+
             <div class="pagination__right"  v-on:click="nextPage(sortAction())">
                 <router-link v-if="currentPage != showPosts.count_post" :to="{ name: 'ShowPosts', params: { page: (this.currentPage + 1) } }">Вперед</router-link>
             </div>
@@ -150,11 +173,26 @@
             <div class="pagination__left"  v-on:click="prevPage(sortAction())">
                 <router-link v-if="currentPage != 1" :to="{ name: 'MainPage', params: { page: (this.currentPage - 1)} }">Назад</router-link>
             </div>
+
+            <div class="pagination__mid">
+              <ul>
+                <li v-if="hasFirst()" @click.prevent="firstPage(sortAction())"><router-link :to="{ name: 'MainPage', params: { page: 1} }">1</router-link></li>
+                <li v-if="hasFirst()">...</li>
+                
+                <li v-if="hasFirstPrev()" @click.prevent="prevPage(sortAction())"><router-link :to="{ name: 'MainPage', params: { page: (this.currentPage - 1)} }">{{ currentPage-1 }}</router-link></li>
+                <li><a class="page_active">{{ currentPage }}</a></li>
+                <li v-if="hasLastNext()" @click.prevent="nextPage(sortAction())"><router-link :to="{ name: 'MainPage', params: { page: (this.currentPage + 1)} }">{{ currentPage+1 }}</router-link></li>
+
+                <li v-if="hasLast()">...</li>
+                <li v-if="hasLast()" @click.prevent="lastPage(sortAction())"><router-link :to="{ name: 'MainPage', params: { page: (this.showPosts.count_post)} }">{{ showPosts.count_post }}</router-link></li>
+              </ul>
+            </div>
+
             <div class="pagination__right"  v-on:click="nextPage(sortAction())">
                 <router-link v-if="currentPage != showPosts.count_post" :to="{ name: 'MainPage', params: { page: (this.currentPage + 1) } }">Вперед</router-link>
             </div>
         </div>
-        
+        <!-- {{ this.$route.params.page }} -->
     </v-app>
   </div>
 </template>
@@ -171,7 +209,7 @@ export default {
       drawer: null,
       categories: [],
       cities: [],
-      sortDate: '',
+      sortDate: '1',
       sortCost: '',
       iconUp: 'keyboard_arrow_up',
       iconDown: 'keyboard_arrow_down',
@@ -189,23 +227,45 @@ export default {
       ...mapState(['nav','authNav','isAuth','categoriesList','cityList','regionList', 'showPosts'])
   },
   created () {
-    this.$store.dispatch('sortPost');  
-  },
-  created () {
+    // this.currentPage = parseInt(this.$route.params.page);
+    isNaN(this.$route.params.page) ? this.currentPage = 1 : this.currentPage = parseInt(this.$route.params.page);
     this.$store.dispatch('loadCategoriesList');
     this.$store.dispatch('loadCityList');
     this.$store.dispatch('loadRegionsList');
-    this.$store.dispatch('sortPost');
+    this.$store.dispatch('sortPost', {
+                cities: this.cities,
+                categories: this.categories,
+                data: this.messageSearch,
+                page: this.$route.params.page,
+                date: this.sortDate, 
+                price: this.sortCost,
+                path: this.$route.path
+            })
   },
   methods: {
+    lastPage: function() {
+      return this.currentPage = this.showPosts.count_post
+    },
+    firstPage: function() {
+      return this.currentPage = 1
+    },
+    hasFirst: function() {
+      return this.currentPage > 2
+    },
+    hasFirstPrev: function() {
+      return this.currentPage > 1
+    },
+    hasLast: function() {
+      return this.currentPage < this.showPosts.count_post - 1
+    },
+    hasLastNext: function() {
+      return this.currentPage < this.showPosts.count_post
+    },
     postsPage: function() {
         return /products\/\d+/.test(this.$route.path)
     },
     vipsPage: function() {
         return /\/\d+/.test(this.$route.path)
-    },
-    forStart: function() {
-        this.currentPage = 1
     },
     nextPage: function() {
         if (this.currentPage > this.showPosts.count_post) {
@@ -273,7 +333,7 @@ export default {
 }
 /* Пагинация */
 .pagination__main {
-  width: 100%;
+  width: 50%;
   height: 44px;
   display: flex;
   justify-content: space-between;
@@ -287,6 +347,9 @@ export default {
 }
 
 .pagination__left {
+  float: left;
+}
+.pagination__left a {
   float: left;
 }
 
@@ -347,4 +410,6 @@ export default {
 .pagination__mid li {
   display: inline-block;
 }
+
+.page_active {border: 1px solid #1665c0 !important; color: #1665c0 !important; cursor:  default !important;}
 </style>
