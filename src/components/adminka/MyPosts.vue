@@ -18,7 +18,7 @@
                             <p style="margin-bottom: 0;">Стоимость: {{ list.price }}</p>
                         </v-card-text>
                         <v-card-actions>
-                            <v-btn :to="{ name: 'RedactPost', params: { myPosts: list } }" flat color="orange">Изменить</v-btn>
+                            <v-btn :to="{ name: 'RedactPost', params: { lists: list } }" flat color="orange">Изменить</v-btn>
                             <v-btn @click="deletePostAction(list.id)" flat color="orange">Удалить</v-btn>
                         </v-card-actions>
                     </v-card>
